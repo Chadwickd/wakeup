@@ -1,4 +1,4 @@
-package com.davelabs.wakeup;
+package com.davelabs.wakemehome;
 
 import android.os.Bundle;
 import android.app.Activity;
