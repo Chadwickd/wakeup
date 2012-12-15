@@ -18,5 +18,5 @@
         android:layout_marginBottom="40dip"
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip"
-        android:text="@+id/confirm_button_text" />
+        android:text="@string/confirm_button_text" />
 </RelativeLayout>
