@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/MainLayout"
+    android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/main_border"
@@ -8,13 +8,13 @@
     tools:context=".MainActivity" >
 
     <Button
-        android:id="@+id/TakeHomeButton"
+        android:id="@+id/take_home_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/take_home" />
 
     <TextView
-        android:id="@+id/SearchBoxLabel"
+        android:id="@+id/search_box_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/main_border"
@@ -22,7 +22,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <EditText
-        android:id="@+id/SearchBox"
+        android:id="@+id/search_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10" >
@@ -31,7 +31,7 @@
     </EditText>
 
     <LinearLayout
-        android:id="@+id/RecentSearchesList"
+        android:id="@+id/recent_searches_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/main_border"
