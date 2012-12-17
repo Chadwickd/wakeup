@@ -5,7 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="perform_take_home">Take me home</string>
-    <string name="confirm_button_text">Take Me Home</string>
+    <string name="confirm_destination">Found it - take me there!</string>
     <string name="search_location_hint">Search for a new destination</string>
     <string name="perform_search">Search</string>
     <string name="settings_radius_before">Wake me up</string>
