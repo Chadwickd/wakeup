@@ -9,7 +9,7 @@
     	android:clickable="true"
     	android:apiKey="0t2gtlp07mnv1C-H993sSROo8XQ-Shu3XXcZJyg"/>
 	<Button
-        android:id="@+id/confirmDestination"
+        android:id="@+id/confirmDestinationButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" 
