@@ -7,7 +7,7 @@
     <string name="confirm_destination">Found it - take me there!</string>
     <string name="search_location_hint">Search for a new destination</string>
     <string name="perform_search">Search</string>
-    <string name="settings_radius_label">Wake me up</string>
+    <string name="settings_radius_label">Alarm radius:</string>
     <string-array
         name="settings_units_spinner">
         <item>Metres</item>

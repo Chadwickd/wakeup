@@ -1,40 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="@dimen/main_border" >
 
-    <Spinner
-        android:id="@+id/settingsUnitsSpinner"
+    <ExpandableListView
+        android:id="@+id/expandableListView1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        tools:listitem="@android:layout/simple_list_item_checked" >
+    </ExpandableListView>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/main_border" >
 
         <TextView
             android:id="@+id/settingsRadiusLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
             android:text="@string/settings_radius_label" />
 
         <NumberPicker
             android:id="@+id/settingsRadiusWheel"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
-        <TextView
-            android:id="@+id/settingsRadiusUnits"
+        <Spinner
+            android:id="@+id/settingsUnitsSpinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="10" />
 
     </LinearLayout>
-
-    <ExpandableListView
-        android:id="@+id/expandableListView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ExpandableListView>
 
 </LinearLayout>
