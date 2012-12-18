@@ -11,6 +11,6 @@
     <string-array
         name="settings_units_spinner">
         <item>Metres</item>
-        <item>Feet</item>
+        <item>Feets</item>
     </string-array>
 </resources>
