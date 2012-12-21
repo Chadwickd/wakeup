@@ -8,7 +8,7 @@
 
     <ExpandableListView
         android:id="@+id/expandableListView1"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         tools:listitem="@android:layout/simple_list_item_checked" >
     </ExpandableListView>
@@ -20,7 +20,7 @@
 
         <TextView
             android:id="@+id/settingsRadiusLabel"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
@@ -28,16 +28,16 @@
 
         <NumberPicker
             android:id="@+id/settingsRadiusWheel"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
         <Spinner
             android:id="@+id/settingsUnitsSpinner"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="10" />
+            android:layout_weight="1" />
 
     </LinearLayout>
 
