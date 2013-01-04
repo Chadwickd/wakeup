@@ -2,12 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-	<com.google.android.maps.MapView
+	<fragment
     	android:id="@+id/searchMap"
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
-    	android:clickable="true"
-    	android:apiKey="AIzaSyCwEX4WrdMZXyUDUsNR0sBlWYVOgLzfah0"/>
+    	class="com.google.android.gms.maps.MapFragment"/>
 	<Button
         android:id="@+id/confirmDestinationButton"
         android:layout_width="fill_parent"

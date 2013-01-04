@@ -1,15 +1,9 @@
 package com.davelabs.wakemehome;
 
+import android.app.Activity;
 import android.os.Bundle;
-import com.google.android.maps.MapActivity;
 
-public class MapPinPointActivity extends MapActivity {
-
-	@Override
-	protected boolean isRouteDisplayed() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+public class MapPinPointActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

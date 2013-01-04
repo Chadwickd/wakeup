@@ -8,5 +8,7 @@
 bin
 gen
 
+.classpath
+
 *.swp
 .DS_STORE
