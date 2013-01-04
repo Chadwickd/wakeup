@@ -1,8 +1,11 @@
 package com.davelabs.wakemehome;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.widget.EditText;
 
 public class MainActivity extends Activity {
 
@@ -19,4 +22,14 @@ public class MainActivity extends Activity {
         return true;
     }
     
+    public void onSearchButtonClicked(View v)
+    {
+    	EditText searchInput = (EditText) this.findViewById(R.id.searchLocationInput);
+    	String searchQuery = searchInput.getText().toString();
+    			
+    	Intent intent = new Intent(this, MapPinPointActivity.class);
+    	intent.putExtra("searchQuery", searchQuery);
+    	
+    	this.startActivity(intent);
+    }
 }
