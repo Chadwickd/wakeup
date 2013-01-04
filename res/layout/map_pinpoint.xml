@@ -7,7 +7,7 @@
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
     	android:clickable="true"
-    	android:apiKey="AIzaSyCkOgAJSUSTh70HXD-ZEJRSLaDybKnxqxQ"/>
+    	android:apiKey="AIzaSyCwEX4WrdMZXyUDUsNR0sBlWYVOgLzfah0"/>
 	<Button
         android:id="@+id/confirmDestinationButton"
         android:layout_width="fill_parent"
