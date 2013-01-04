@@ -1,7 +1,6 @@
 package com.davelabs.wakemehome;
 
 import android.os.Bundle;
-
 import com.google.android.maps.MapActivity;
 
 public class MapPinPointActivity extends MapActivity {
