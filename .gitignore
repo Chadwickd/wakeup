@@ -8,7 +8,10 @@
 bin
 gen
 
+google-play-services_lib
+
 .classpath
+.metadata
 
 *.swp
 .DS_STORE
