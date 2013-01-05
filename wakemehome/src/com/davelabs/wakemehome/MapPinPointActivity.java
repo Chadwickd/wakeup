@@ -57,7 +57,7 @@ public class MapPinPointActivity extends Activity {
 	}
 
 	private String getPassedSearchQuery() {
-        Bundle extras = getIntent().getExtras();
+        Bundle extras = this.getIntent().getExtras();
 		String passedSearchType = extras.getString("searchQuery");
 		return passedSearchType;
 	}
