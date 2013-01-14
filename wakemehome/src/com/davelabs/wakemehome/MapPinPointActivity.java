@@ -9,7 +9,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -25,11 +24,12 @@ public class MapPinPointActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_pinpoint);
+        MapFragment f = (MapFragment) this.getFragmentManager().findFragmentById(R.id.searchMap);
+        _map = f.getMap();
         String searchQuery = getPassedSearchQuery();
         LatLng searchedPoint = convertSearchQueryToPoint(searchQuery);
         moveMapToTargetPoint(searchedPoint);
-        MapFragment f = (MapFragment) this.getFragmentManager().findFragmentById(R.id.searchMap);
-        _map = f.getMap();
+       
 		
     }
 
@@ -68,10 +68,9 @@ public class MapPinPointActivity extends Activity {
 		return passedSearchType;
 	}
 	
-	private void onLocationOkButtonClicked (View v)  {
+	public void onLocationOkButtonClicked (View v)  {
     	Intent intent = new Intent(this, MapTrackingActivity.class);
     	intent.putExtra("LocationCoords", _map.getCameraPosition());
-    	
     	this.startActivity(intent);
     }
 	
