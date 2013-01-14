@@ -13,9 +13,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        
-      //Delete this when we no longer want a default value in the search
-        ((EditText) this.findViewById(R.id.searchLocationInput)).setText("EC1N 8NX");
     }
 
     @Override
