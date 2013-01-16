@@ -34,7 +34,7 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 		_ins = getInstrumentation();
 	}
 	
-	public void testSearchButtonStartsMapSearch()
+	public void testASearchButtonStartsMapSearch()
 	{
 		ActivityMonitor monitor = _ins.addMonitor(
 				com.davelabs.wakemehome.MapPinPointActivity.class.getName(),
@@ -45,6 +45,8 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 		TouchUtils.clickView(this, _searchButton);
 		
 		assertEquals(monitor.getHits(), 1);
+		
+		_ins.removeMonitor(monitor);
 	}
 	
 	public void testSearchActionSendsSearchQuery()
@@ -58,10 +60,14 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 		_ins.sendStringSync(testString);
 		TouchUtils.clickView(this, _searchButton);
 		
-		Activity activity = _ins.waitForMonitorWithTimeout(monitor, 5000);
+		Activity activity = _ins.waitForMonitorWithTimeout(monitor, 10000);
+		assertNotNull(activity);
+		
 		Intent launchIntent = activity.getIntent();
 		Bundle bundle = launchIntent.getExtras();
 		
 		assertEquals(testString, bundle.getString("searchQuery"));
+		
+		activity.finish();
 	}
 }
