@@ -34,7 +34,7 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 		_ins = getInstrumentation();
 	}
 	
-	public void testASearchButtonStartsMapSearch()
+	public void testSearchButtonStartsMapSearch()
 	{
 		ActivityMonitor monitor = _ins.addMonitor(
 				com.davelabs.wakemehome.MapPinPointActivity.class.getName(),

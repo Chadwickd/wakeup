@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -23,14 +24,21 @@ public class MapPinPointActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.map_pinpoint);
-        MapFragment f = (MapFragment) this.getFragmentManager().findFragmentById(R.id.searchMap);
-        _map = f.getMap();
-        String searchQuery = getPassedSearchQuery();
-        LatLng searchedPoint = convertSearchQueryToPoint(searchQuery);
-        moveMapToTargetPoint(searchedPoint);
-       
-		
+        try
+        {
+        	setContentView(R.layout.map_pinpoint);
+        	MapFragment f = (MapFragment) this.getFragmentManager().findFragmentById(R.id.searchMap);
+        	_map = f.getMap();
+        	String searchQuery = getPassedSearchQuery();
+        	LatLng searchedPoint = convertSearchQueryToPoint(searchQuery);
+        	moveMapToTargetPoint(searchedPoint);	
+        }
+        catch (Exception e)
+        {
+        	Log.e("WakeMeHome", "Error creating MapPinPointActivity", e); 
+        	this.finish();
+        }
+        
     }
 
 	private void moveMapToTargetPoint(LatLng targetPoint) {
