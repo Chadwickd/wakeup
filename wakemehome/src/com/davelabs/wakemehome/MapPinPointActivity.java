@@ -21,6 +21,8 @@ import com.google.android.gms.maps.model.LatLng;
 public class MapPinPointActivity extends Activity {
 
 	private GoogleMap _map;
+	private Toast _search_error_toast;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +40,6 @@ public class MapPinPointActivity extends Activity {
         	Log.e("WakeMeHome", "Error creating MapPinPointActivity", e); 
         	this.finish();
         }
-        
     }
 
 	private void moveMapToTargetPoint(LatLng targetPoint) {
@@ -57,13 +58,14 @@ public class MapPinPointActivity extends Activity {
 				LatLng targetPosition = new LatLng (listOfLocations.get(0).getLatitude(),listOfLocations.get(0).getLongitude());
 				return targetPosition;
 			} catch (IndexOutOfBoundsException e) {
-				Toast.makeText(this, "Cannot Find Location Please Try Again", Toast.LENGTH_SHORT).show();
+				Toast errorToast = getSearchErrorToast();
+				errorToast.show();
 				return null;
 			}
 			
 		} catch (IOException e) {
 			e.printStackTrace();
-			Toast.makeText(this, "GMaps Problem", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Unable to connect to google maps servers", Toast.LENGTH_SHORT).show();
 			return null;
 		}
 		
@@ -82,5 +84,13 @@ public class MapPinPointActivity extends Activity {
     	this.startActivity(intent);
     }
 	
-	
+	public Toast getSearchErrorToast()
+	{
+		if (_search_error_toast == null)
+		{
+			_search_error_toast = Toast.makeText(this, "Couldn't find search location. Please try again", Toast.LENGTH_SHORT);
+		}
+		
+		return _search_error_toast;
+	}
 }

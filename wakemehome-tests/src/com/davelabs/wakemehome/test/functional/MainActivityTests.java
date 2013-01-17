@@ -1,4 +1,4 @@
-package com.davelabs.wakemehome.test;
+package com.davelabs.wakemehome.test.functional;
 
 import android.app.Activity;
 import android.app.Instrumentation;
