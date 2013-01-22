@@ -6,6 +6,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.widget.Toast;
 
 import com.davelabs.wakemehome.MapPinPointActivity;
+import com.davelabs.wakemehome.test.mocks.IOExceptionSearchProvider;
 
 public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<MapPinPointActivity> {
 
@@ -27,22 +28,28 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		
 		MapPinPointActivity a = (MapPinPointActivity)getActivity();
 		Toast t = a.getSearchErrorToast();
-		
-		//try to add some kind of sleep
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+	
 		assert(t.getView().isShown());
 	}
+	
 	public void testNoInternetConnection() {
 		Intent intent = new Intent();
 		intent.putExtra("searchQuery", "EC1N 8NX");
 		setActivityIntent(intent);
-		MapPinPointActivity a = (MapPinPointActivity)getActivity();
 		
+		
+		MapPinPointActivity a = new MapPinPointActivity();
+		a.setSearchProvider(new IOExceptionSearchProvider());
+		
+		Toast t = a.getNoInternetToast();
+		assertFalse(t.getView().isShown());
+		
+		this.setActivity(a);
+		assertEquals(a, getActivity());
+		
+		a = (MapPinPointActivity) getActivity();
+		
+		assertEquals(t, a.getNoInternetToast());
+		assert(t.getView().isShown());
 	}
 }
