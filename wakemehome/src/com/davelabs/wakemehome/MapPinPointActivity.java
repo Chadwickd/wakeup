@@ -100,6 +100,7 @@ public class MapPinPointActivity extends Activity {
 		
 		return _searchErrorToast;
 	}
+	
 
 	public void setSearchProvider(ISearchProvider provider) {
 		_searchProvider = provider;
