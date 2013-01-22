@@ -7,11 +7,11 @@ import android.widget.Toast;
 
 import com.davelabs.wakemehome.MapPinPointActivity;
 
-public class FunctionalMapPinPointActivityTests extends ActivityInstrumentationTestCase2<MapPinPointActivity> {
+public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<MapPinPointActivity> {
 
 	private Instrumentation _ins;
 	
-	public FunctionalMapPinPointActivityTests() {
+	public MapPinPointActivityTests() {
 		super(MapPinPointActivity.class);
 	}
 	

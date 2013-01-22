@@ -12,11 +12,11 @@ import com.davelabs.wakemehome.test.mocks.IOExceptionSearchProvider;
 import com.google.android.gms.internal.e;
 import com.google.android.gms.maps.model.LatLng;
 
-public class UnitMapPinPointActivityTests extends ActivityUnitTestCase<MapPinPointActivity> {
+public class GeocoderSearchProviderTests extends ActivityUnitTestCase<MapPinPointActivity> {
 
 	
 
-	public UnitMapPinPointActivityTests() {
+	public GeocoderSearchProviderTests() {
 		super(MapPinPointActivity.class);
 		
 	}

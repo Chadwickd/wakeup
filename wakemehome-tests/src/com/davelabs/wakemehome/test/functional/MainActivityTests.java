@@ -15,14 +15,14 @@ import android.widget.EditText;
 
 import com.davelabs.wakemehome.MainActivity;
 
-public class FunctionalMainActivityTests extends ActivityInstrumentationTestCase2<MainActivity> {
+public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
 	private MainActivity _a;
 	private EditText _queryInputBox;
 	private Button _searchButton;
 	private Instrumentation _ins;
 	
-	public FunctionalMainActivityTests() {
+	public MainActivityTests() {
 		super(MainActivity.class);
 	}
 	
