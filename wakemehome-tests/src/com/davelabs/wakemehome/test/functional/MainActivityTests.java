@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.app.Instrumentation;
 import android.app.Instrumentation.ActivityMonitor;
 import android.app.Instrumentation.ActivityResult;
+import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
-import android.test.UiThreadTest;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -70,4 +70,15 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 		
 		activity.finish();
 	}
+	
+	   private void turnOffWiFi() {
+		   	WifiManager wifiManager = (WifiManager) _a.getSystemService(Context.WIFI_SERVICE);
+	        if (wifiManager.isWifiEnabled()) {
+	            wifiManager.setWifiEnabled(false);
+	        } else {
+	            wifiManager.setWifiEnabled(true);
+	        }
+	    }
+	
+	
 }

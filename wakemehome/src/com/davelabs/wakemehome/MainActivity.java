@@ -1,7 +1,10 @@
 package com.davelabs.wakemehome;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -24,6 +27,7 @@ public class MainActivity extends Activity {
     
     public void onSearchButtonClicked(View v)
     {
+    	if (!isOnline()) {}
     	EditText searchInput = (EditText) this.findViewById(R.id.searchLocationInput);
     	String searchQuery = searchInput.getText().toString();
     			
@@ -31,5 +35,16 @@ public class MainActivity extends Activity {
     	intent.putExtra("searchQuery", searchQuery);
     	
     	this.startActivity(intent);
+    }
+    
+    
+    public boolean isOnline() {
+        ConnectivityManager cm =
+            (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }
+        return false;
     }
 }

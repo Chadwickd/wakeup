@@ -21,12 +21,8 @@ import com.google.android.gms.maps.model.LatLng;
 public class MapPinPointActivity extends Activity {
 
 	private GoogleMap _map;
-	
 	private Toast _searchErrorToast;
-	private Toast _noInternetToast;
-	
 	private ISearchProvider _searchProvider;
-	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,20 +93,12 @@ public class MapPinPointActivity extends Activity {
 	
 	public Toast getSearchErrorToast()
 	{
-		if (_searchErrorToast == null) {
+		if (_searchErrorToast == null)
+		{
 			_searchErrorToast = Toast.makeText(this, "Couldn't find search location. Please try again", Toast.LENGTH_SHORT);
 		}
 		
 		return _searchErrorToast;
-	}
-	
-	public Toast getNoInternetToast()
-	{
-		if (_noInternetToast == null) {
-			_noInternetToast = Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT);
-		}
-		
-		return _noInternetToast;
 	}
 
 	public void setSearchProvider(ISearchProvider provider) {
