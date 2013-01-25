@@ -1,12 +1,11 @@
 package com.davelabs.wakemehome.test.functional;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Instrumentation;
 import android.app.Instrumentation.ActivityMonitor;
 import android.app.Instrumentation.ActivityResult;
-import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
@@ -14,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.davelabs.wakemehome.MainActivity;
+import com.davelabs.wakemehome.test.TestHelperService;
+import com.davelabs.wakemehome.test.helpers.WiFiHelper;
 
 public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -21,6 +22,7 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 	private EditText _queryInputBox;
 	private Button _searchButton;
 	private Instrumentation _ins;
+	private WiFiHelper _wirelessControl;
 	
 	public MainActivityTests() {
 		super(MainActivity.class);
@@ -29,6 +31,8 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 	public void setUp()
 	{
 		_a = getActivity();
+		_a.startService(new Intent(_a, com.davelabs.wakemehome.test.TestHelperService.class));
+		_wirelessControl = new WiFiHelper(TestHelperService.getContext());
 		_queryInputBox = (EditText) _a.findViewById(com.davelabs.wakemehome.R.id.searchLocationInput);
 		_searchButton = (Button) _a.findViewById(com.davelabs.wakemehome.R.id.performSearchButton);
 		_ins = getInstrumentation();
@@ -71,14 +75,15 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 		activity.finish();
 	}
 	
-	   private void turnOffWiFi() {
-		   	WifiManager wifiManager = (WifiManager) _a.getSystemService(Context.WIFI_SERVICE);
-	        if (wifiManager.isWifiEnabled()) {
-	            wifiManager.setWifiEnabled(false);
-	        } else {
-	            wifiManager.setWifiEnabled(true);
-	        }
-	    }
+	public void testNoInternetLaunchesPopup()
+	{	
+		_wirelessControl.setWiFiOff();
+		TouchUtils.clickView(this, _searchButton);
+		AlertDialog popup = _a.getPopup();
+		assert(popup.isShowing());
+		_wirelessControl.setWiFiOn();
+	}
+	
 	
 	
 }

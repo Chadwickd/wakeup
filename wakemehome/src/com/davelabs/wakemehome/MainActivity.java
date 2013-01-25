@@ -1,7 +1,9 @@
 package com.davelabs.wakemehome;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 
 public class MainActivity extends Activity {
+	private AlertDialog _popup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +30,7 @@ public class MainActivity extends Activity {
     
     public void onSearchButtonClicked(View v)
     {
-    	if (!isOnline()) {}
+    	//if (!isOnline()) {}
     	EditText searchInput = (EditText) this.findViewById(R.id.searchLocationInput);
     	String searchQuery = searchInput.getText().toString();
     			
@@ -47,4 +50,23 @@ public class MainActivity extends Activity {
         }
         return false;
     }
+
+	public AlertDialog getPopup() {
+		if (_popup == null) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("You don't seem to have internet, we will take you to the settings page to turn it on. Press back to return when you are done");
+			builder.setPositiveButton("Go", dialogClickListener);
+			_popup = builder.create();
+		}
+		return _popup;
+	}
+	
+	private DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+	    @Override
+	    public void onClick(DialogInterface dialog, int which) {
+	            
+	    }
+	};
+
+	
 }
