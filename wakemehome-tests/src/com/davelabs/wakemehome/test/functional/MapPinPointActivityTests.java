@@ -6,7 +6,6 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.widget.Toast;
 
 import com.davelabs.wakemehome.MapPinPointActivity;
-import com.davelabs.wakemehome.test.mocks.IOExceptionSearchProvider;
 
 public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<MapPinPointActivity> {
 

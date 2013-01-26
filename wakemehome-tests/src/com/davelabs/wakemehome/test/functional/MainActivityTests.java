@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.davelabs.wakemehome.MainActivity;
-import com.davelabs.wakemehome.test.TestHelperService;
 import com.davelabs.wakemehome.test.helpers.WiFiHelper;
 
 public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActivity> {
@@ -31,8 +30,7 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 	public void setUp()
 	{
 		_a = getActivity();
-		_a.startService(new Intent(_a, com.davelabs.wakemehome.test.TestHelperService.class));
-		_wirelessControl = new WiFiHelper(TestHelperService.getContext());
+		_wirelessControl = new WiFiHelper(_a);
 		_queryInputBox = (EditText) _a.findViewById(com.davelabs.wakemehome.R.id.searchLocationInput);
 		_searchButton = (Button) _a.findViewById(com.davelabs.wakemehome.R.id.performSearchButton);
 		_ins = getInstrumentation();
