@@ -5,6 +5,7 @@ import java.io.IOException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,50 +21,76 @@ import com.google.android.gms.maps.model.LatLng;
 public class MapPinPointActivity extends Activity {
 
 	private GoogleMap _map;
-	private Dialog _searchQueryNotFoundDialog;
-	private ISearchProvider _searchProvider;
 	
+	private Dialog _searchQueryNotFoundDialog;
+
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_pinpoint);
-        _searchProvider = new GeocoderSearchProvider(this);
+        setInstanceVariables();
         
+        tryToLookupSearchQuery();
+    }
+
+	private void setInstanceVariables() {        
         MapFragment f = (MapFragment) this.getFragmentManager().findFragmentById(R.id.searchMap);
         _map = f.getMap();
-        
-        String searchQuery = getPassedSearchQuery();
-        LatLng targetPoint = lookupSearchQuery(searchQuery);
-        
-        if (targetPoint != null) {
-        	moveMapToTargetPoint(targetPoint);
-        }
-    }
+	}
+	
+	private void tryToLookupSearchQuery() {
+		final Context c = this;
+		String searchQuery = getPassedSearchQuery();
+		
+		LocationSearcher.ISearchListener listener = new LocationSearcher.ISearchListener() {
+			@Override
+			public void onSearchError(Exception e) {
+				searchQueryLookupFailed(e);
+			}
+			
+			@Override
+			public void onSearchComplete(LatLng result) {
+				searchQueryLookupComplete(result);
+			}
+		};
+		
+		LocationSearcher searcher = new LocationSearcher(listener);
+		searcher.startSearch(new GeocoderSearchProvider(this), searchQuery);
+	}
+	
+	private void searchQueryLookupFailed(Exception e) {
+		hideOverlay();
+		if (e instanceof IOException) {
+			Toast.makeText(this, "Unable to connect to google maps servers", Toast.LENGTH_LONG).show();
+		} else {
+			Toast.makeText(this, "Unknown error", Toast.LENGTH_LONG).show();
+		}
+	}
+	
+	private void searchQueryLookupComplete(LatLng result) {
+		hideOverlay();
+		if (result != null) {
+			moveMapToTargetPoint(result);
+			showConfirmDestinationButton();
+		} else {
+			Dialog d = getSearchQueryNotFoundDialog();
+			d.show();
+		}
+	}
+
+	private void hideOverlay() {
+		View v = this.findViewById(R.id.progressOverlay);
+		v.setVisibility(View.INVISIBLE);
+	}
+
+	private void showConfirmDestinationButton() {
+		View b = this.findViewById(R.id.confirmDestinationButton);
+		b.setVisibility(View.VISIBLE);
+	}
 
 	private void moveMapToTargetPoint(LatLng targetPoint) {
 		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPoint,_map.getMaxZoomLevel() -5);
 		_map.animateCamera(cameraUpdate);
-	}
-
-	public LatLng lookupSearchQuery(String searchQuery) {
-		
-		LatLng result = null;
-		
-		try {
-			result = _searchProvider.getSearchResult(searchQuery);
-			
-			if (result == null) {
-				Dialog d = getSearchQueryNotFoundDialog();
-				d.show();
-			}
-			
-			return result;
-		} catch (IOException e) {
-			e.printStackTrace();
-			Toast.makeText(this, "Unable to connect to google maps servers", Toast.LENGTH_SHORT).show();
-		}
-		
-		return result;
 	}
 
 	private String getPassedSearchQuery() {

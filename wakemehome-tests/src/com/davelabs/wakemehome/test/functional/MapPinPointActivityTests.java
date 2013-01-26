@@ -38,7 +38,7 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		MapPinPointActivity a = (MapPinPointActivity) getActivity();
 	
 		View overlay = (View) a.findViewById(R.id.progressOverlay);
-		ViewHelper.WaitForViewToHide(overlay, 5);
+		ViewHelper.assertViewHides(overlay, 5);
 			
 		Dialog d = a.getSearchQueryNotFoundDialog();
 		assertTrue(d.isShowing());

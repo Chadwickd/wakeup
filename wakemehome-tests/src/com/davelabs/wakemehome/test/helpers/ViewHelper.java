@@ -5,7 +5,7 @@ import android.view.View;
 
 public class ViewHelper {
 
-	public static void WaitForViewToHide(View v, long timeout) {
+	public static void assertViewHides(View v, long timeout) {
 		long startTime = System.currentTimeMillis();
 		long waitFor = timeout * 1000;
 		
