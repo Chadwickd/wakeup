@@ -31,6 +31,8 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 	{
 		_a = getActivity();
 		_wirelessControl = new WiFiHelper(_a);
+		_wirelessControl.setWiFiOn();
+		while (!_wirelessControl.isWiFiConnected());
 		_queryInputBox = (EditText) _a.findViewById(com.davelabs.wakemehome.R.id.searchLocationInput);
 		_searchButton = (Button) _a.findViewById(com.davelabs.wakemehome.R.id.performSearchButton);
 		_ins = getInstrumentation();

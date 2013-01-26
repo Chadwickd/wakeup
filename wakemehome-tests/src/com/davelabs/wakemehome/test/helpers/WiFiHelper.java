@@ -17,4 +17,7 @@ public class WiFiHelper {
     public void setWiFiOn() {
         wifiManager.setWifiEnabled(true);
     }
+    public boolean isWiFiConnected() {
+    	return wifiManager.isWifiEnabled();
+    }
 }
