@@ -1,5 +1,6 @@
 package com.davelabs.wakemehome.test.functional;
 
+import junit.framework.Assert;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Instrumentation;
@@ -78,10 +79,8 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 		_wirelessControl.setWiFiOff();
 		TouchUtils.clickView(this, _searchButton);
 		AlertDialog popup = _a.getPopup();
-		assert(popup.isShowing());
+		
+		Assert.assertTrue(popup.isShowing());
 		_wirelessControl.setWiFiOn();
 	}
-	
-	
-	
 }

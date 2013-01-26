@@ -28,7 +28,7 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		MapPinPointActivity a = (MapPinPointActivity)getActivity();
 		Toast t = a.getSearchErrorToast();
 	
-		assert(t.getView().isShown());
+		assertTrue(t.getView().isShown());
 	}
 	
 //	public void testNoInternetConnection() {
