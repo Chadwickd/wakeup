@@ -1,5 +1,6 @@
 package com.davelabs.wakemehome.test.functional;
 
+import android.app.Dialog;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
@@ -26,9 +27,9 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		setActivityIntent(intent);
 		
 		MapPinPointActivity a = (MapPinPointActivity) getActivity();
-		Toast t = a.getSearchQueryNotFoundToast();
+		Dialog d = a.getSearchQueryNotFoundDialog();
 	
-		assertTrue(t.getView().isShown());
+		assertTrue(d.isShowing());
 	}
 	
 //	public void testNoInternetConnection() {
