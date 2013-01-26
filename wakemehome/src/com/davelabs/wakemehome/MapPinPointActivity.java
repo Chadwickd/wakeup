@@ -78,8 +78,7 @@ public class MapPinPointActivity extends Activity {
     	this.startActivity(intent);
     }
 	
-	public Dialog getSearchQueryNotFoundDialog()
-	{
+	public Dialog getSearchQueryNotFoundDialog() {
 		if (_searchQueryNotFoundDialog == null) {
 			final Activity a = this;
 			
@@ -96,5 +95,10 @@ public class MapPinPointActivity extends Activity {
 		}
 		
 		return _searchQueryNotFoundDialog;
+	}
+
+	public Dialog getSearchingDialog() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

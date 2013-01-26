@@ -1,23 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+	android:layout_height="fill_parent">
 	
-    <fragment
-    	android:id="@+id/searchMap"
-    	android:layout_width="fill_parent"
-    	android:layout_height="fill_parent"
-    	class="com.google.android.gms.maps.MapFragment"/>
-    
-	<Button
-        android:id="@+id/confirmDestinationButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" 
-        android:layout_marginBottom="40dip"
-        android:layout_marginLeft="10dip"
-        android:layout_marginRight="10dip"
-        android:onClick="onLocationOkButtonClicked"
-        android:text="@string/confirm_destination" />
-</RelativeLayout>
+	<RelativeLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent">
+		
+	    <fragment
+	    	android:id="@+id/searchMap"
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="fill_parent"
+	    	class="com.google.android.gms.maps.MapFragment"/>
+	    
+		<Button
+		    android:id="@+id/confirmDestinationButton"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_alignParentBottom="true"
+		    android:layout_marginBottom="40dip"
+		    android:layout_marginLeft="10dip"
+		    android:layout_marginRight="10dip"
+		    android:onClick="onLocationOkButtonClicked"
+		    android:text="@string/confirm_destination"
+		    android:visibility="invisible" />
+
+	</RelativeLayout>
+	<RelativeLayout
+	    android:id="@+id/progressOverlay"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:background="#000000"
+	    android:alpha="0.5">	
+		<ProgressBar
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_centerHorizontal="true"
+		    android:layout_centerVertical="true" />
+	</RelativeLayout>
+</FrameLayout>
