@@ -25,8 +25,8 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		intent.putExtra("searchQuery", "skjfhskjdfh");
 		setActivityIntent(intent);
 		
-		MapPinPointActivity a = (MapPinPointActivity)getActivity();
-		Toast t = a.getSearchErrorToast();
+		MapPinPointActivity a = (MapPinPointActivity) getActivity();
+		Toast t = a.getSearchQueryNotFoundToast();
 	
 		assertTrue(t.getView().isShown());
 	}

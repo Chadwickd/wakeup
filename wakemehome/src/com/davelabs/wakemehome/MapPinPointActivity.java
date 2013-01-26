@@ -1,14 +1,10 @@
 package com.davelabs.wakemehome;
 
 import java.io.IOException;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -21,62 +17,51 @@ import com.google.android.gms.maps.model.LatLng;
 public class MapPinPointActivity extends Activity {
 
 	private GoogleMap _map;
-	private Toast _searchErrorToast;
+	private Toast _searchQueryNotFoundToast;
 	private ISearchProvider _searchProvider;
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try
-        {
-        	setContentView(R.layout.map_pinpoint);
-        	MapFragment f = (MapFragment) this.getFragmentManager().findFragmentById(R.id.searchMap);
-        	_map = f.getMap();
-        	String searchQuery = getPassedSearchQuery();
-        	LatLng searchedPoint = convertSearchQueryToPoint(searchQuery);
-        	moveMapToTargetPoint(searchedPoint);	
-        }
-        catch (Exception e)
-        {
-        	Log.e("WakeMeHome", "Error creating MapPinPointActivity", e); 
+        setContentView(R.layout.map_pinpoint);
+        _searchProvider = new GeocoderSearchProvider(this);
+        
+        MapFragment f = (MapFragment) this.getFragmentManager().findFragmentById(R.id.searchMap);
+        _map = f.getMap();
+        
+        String searchQuery = getPassedSearchQuery();
+        LatLng targetPoint = lookupSearchQuery(searchQuery);
+        
+        if (targetPoint != null) {
+        	moveMapToTargetPoint(targetPoint);
+        } else {
         	this.finish();
         }
     }
 
 	private void moveMapToTargetPoint(LatLng targetPoint) {
-		
-		
 		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPoint,_map.getMaxZoomLevel() -5);
 		_map.animateCamera(cameraUpdate);
 	}
 
-	public LatLng convertSearchQueryToPoint(String searchQuery) {
-//		List<Address> listOfLocations = null;
-//		Geocoder gc = new Geocoder(this);
-//		try {
-			//listOfLocations = gc.getFromLocationName(searchQuery, 1);
-			try {
-				return _searchProvider.getSearchResult(searchQuery);
-			} catch (IOException e) {
-				e.printStackTrace();
-				Toast.makeText(this, "Unable to connect to google maps servers", Toast.LENGTH_SHORT).show();
-				return null;
+	public LatLng lookupSearchQuery(String searchQuery) {
+		
+		LatLng result = null;
+		
+		try {
+			result = _searchProvider.getSearchResult(searchQuery);
+			
+			if (result == null) {
+				Toast t = getSearchQueryNotFoundToast();
+				t.show();
 			}
-//			try {
-//				LatLng targetPosition = new LatLng (listOfLocations.get(0).getLatitude(),listOfLocations.get(0).getLongitude());
-//				return targetPosition;
-//			} catch (IndexOutOfBoundsException e) {
-//				Toast errorToast = getSearchErrorToast();
-//				errorToast.show();
-//				return null;
-//			}
-//			
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			Toast.makeText(this, "Unable to connect to google maps servers", Toast.LENGTH_SHORT).show();
-//			return null;
-//		}
+			
+			return result;
+		} catch (IOException e) {
+			e.printStackTrace();
+			Toast.makeText(this, "Unable to connect to google maps servers", Toast.LENGTH_SHORT).show();
+		}
 		
-		
+		return result;
 	}
 
 	private String getPassedSearchQuery() {
@@ -91,17 +76,14 @@ public class MapPinPointActivity extends Activity {
     	this.startActivity(intent);
     }
 	
-	public Toast getSearchErrorToast()
+	public Toast getSearchQueryNotFoundToast()
 	{
-		if (_searchErrorToast == null)
+		if (_searchQueryNotFoundToast == null)
 		{
-			_searchErrorToast = Toast.makeText(this, "Couldn't find search location. Please try again", Toast.LENGTH_SHORT);
+			_searchQueryNotFoundToast = Toast.makeText(this, 
+					"Couldn't find search location. Please try again", Toast.LENGTH_SHORT);
 		}
 		
-		return _searchErrorToast;
-	}
-
-	public void setSearchProvider(ISearchProvider provider) {
-		_searchProvider = provider;
+		return _searchQueryNotFoundToast;
 	}
 }
