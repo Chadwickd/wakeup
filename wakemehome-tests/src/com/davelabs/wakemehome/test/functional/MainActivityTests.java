@@ -6,9 +6,12 @@ import android.app.Instrumentation;
 import android.app.Instrumentation.ActivityMonitor;
 import android.app.Instrumentation.ActivityResult;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.TouchUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -53,8 +56,7 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 		_ins.removeMonitor(monitor);
 	}
 	
-	public void testSearchActionSendsSearchQuery()
-	{
+	public void testSearchActionSendsSearchQuery() {
 		ActivityMonitor monitor = _ins.addMonitor(
 				com.davelabs.wakemehome.MapPinPointActivity.class.getName(),
 				null, false);
@@ -75,12 +77,23 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 		activity.finish();
 	}
 	
-	public void testNoInternetLaunchesPopup()
-	{	
+	public void testNoInternetLaunchesPopup() {	
 		_wirelessControl.setWiFiOff();
+		
 		TouchUtils.clickView(this, _searchButton);
 		AlertDialog popup = _a.getPopup();
 		assertTrue(popup.isShowing());
+		
+		ActivityMonitor monitor = _ins.addMonitor(
+				new IntentFilter(Settings.ACTION_SETTINGS),
+				new ActivityResult(Activity.RESULT_OK, null), true);
+		assertEquals(monitor.getHits(), 0);
+		
+		View positiveButton = popup.getButton(AlertDialog.BUTTON_POSITIVE);
+		TouchUtils.clickView(this, positiveButton);
+		assertEquals(monitor.getHits(), 1);
+		
+		_ins.removeMonitor(monitor);
 		_wirelessControl.setWiFiOn();
 	}
 }

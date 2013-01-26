@@ -15,7 +15,6 @@ import android.widget.EditText;
 
 public class MainActivity extends Activity {
 	private AlertDialog _popup;
-	private final int SETTINGS_RESULT = 565567765;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,15 +26,6 @@ public class MainActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
-    }
-    
-    public void onActivityResult (int requestCode, int resultCode, Intent data) {
-    	if (requestCode==SETTINGS_RESULT) {
-    		if (isOnline()) {
-    			startSearchActivity();
-    		}
-    	}
-    	
     }
     
     public void onSearchButtonClicked(View v)
@@ -83,7 +73,7 @@ public class MainActivity extends Activity {
 	private DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 	    @Override
 	    public void onClick(DialogInterface dialog, int which) {
-	    	startActivityForResult(new Intent(Settings.ACTION_WIRELESS_SETTINGS),SETTINGS_RESULT);
+	    	startActivity(new Intent(Settings.ACTION_SETTINGS));
 	    }
 	};
 
