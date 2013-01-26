@@ -15,7 +15,7 @@ import android.widget.EditText;
 
 public class MainActivity extends Activity {
 	private AlertDialog _popup;
-
+	private final int SETTINGS_RESULT = 565567765;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,11 +29,27 @@ public class MainActivity extends Activity {
         return true;
     }
     
+    public void onActivityResult (int requestCode, int resultCode, Intent data) {
+    	if (requestCode==SETTINGS_RESULT) {
+    		if (isOnline()) {
+    			startSearchActivity();
+    		}
+    	}
+    	
+    }
+    
     public void onSearchButtonClicked(View v)
     {
     	if (!isOnline()) {
     		getPopup().show();
+    		
+    	} else {
+    		startSearchActivity();
     	}
+    }
+    
+    private void startSearchActivity() {
+    	
     	EditText searchInput = (EditText) this.findViewById(R.id.searchLocationInput);
     	String searchQuery = searchInput.getText().toString();
     			
@@ -41,8 +57,8 @@ public class MainActivity extends Activity {
     	intent.putExtra("searchQuery", searchQuery);
     	
     	startActivity(intent);
+    	
     }
-    
     
     public boolean isOnline() {
         ConnectivityManager cm =
@@ -67,7 +83,7 @@ public class MainActivity extends Activity {
 	private DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 	    @Override
 	    public void onClick(DialogInterface dialog, int which) {
-	    	startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+	    	startActivityForResult(new Intent(Settings.ACTION_WIRELESS_SETTINGS),SETTINGS_RESULT);
 	    }
 	};
 
