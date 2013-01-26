@@ -96,9 +96,4 @@ public class MapPinPointActivity extends Activity {
 		
 		return _searchQueryNotFoundDialog;
 	}
-
-	public Dialog getSearchingDialog() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
