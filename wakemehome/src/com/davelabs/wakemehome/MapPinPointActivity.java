@@ -125,8 +125,29 @@ public class MapPinPointActivity extends Activity {
 		return _searchQueryNotFoundDialog;
 	}
 
-	public Dialog getSearchQueryLookupFailed() {
-		// TODO Auto-generated method stub
-		return null;
+	public Dialog getSearchQueryLookupFailedDialog() {
+		if (_searchQueryLookupFailedDialog == null) {
+			final Activity a = this;
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("Unable to find the address, please try another search query.");
+			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					a.finish();
+				}
+			});
+			
+			builder.setPositiveButton("Retry Now", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					tryToLookupSearchQuery();
+				}
+			});
+			
+			_searchQueryLookupFailedDialog = builder.create();
+		}
+		
+		return _searchQueryLookupFailedDialog;
 	}
 }

@@ -56,4 +56,11 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		intent.putExtra("searchQuery", query);
 		setActivityIntent(intent);
 	}
+	
+	private void testNoInternetPolls {
+		MapPinPointActivity a = (MapPinPointActivity) getActivity();
+		a.getSearchQueryLookupFailed();
+		
+		
+	}
 }
