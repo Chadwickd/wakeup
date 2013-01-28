@@ -23,7 +23,8 @@ public class MapPinPointActivity extends Activity {
 	private GoogleMap _map;
 	
 	private Dialog _searchQueryNotFoundDialog;
-
+	private Dialog _searchQueryLookupFailedDialog;
+	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,5 +123,10 @@ public class MapPinPointActivity extends Activity {
 		}
 		
 		return _searchQueryNotFoundDialog;
+	}
+
+	public Dialog getSearchQueryLookupFailed() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
