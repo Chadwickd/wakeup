@@ -16,7 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.davelabs.wakemehome.MainActivity;
-import com.davelabs.wakemehome.test.helpers.WiFiHelper;
+import com.davelabs.wakemehome.test.helpers.WifiHelper;
 
 public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActivity> {
 
@@ -24,7 +24,7 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 	private EditText _queryInputBox;
 	private Button _searchButton;
 	private Instrumentation _ins;
-	private WiFiHelper _wirelessControl;
+	private WifiHelper _wirelessControl;
 	
 	public MainActivityTests() {
 		super(MainActivity.class);
@@ -33,8 +33,8 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 	public void setUp()
 	{
 		_a = getActivity();
-		_wirelessControl = new WiFiHelper(_a);
-		_wirelessControl.setWiFiOn();
+		_wirelessControl = new WifiHelper(_a);
+		_wirelessControl.setWifiOn();
 		while (!_wirelessControl.isWiFiConnected());
 		_queryInputBox = (EditText) _a.findViewById(com.davelabs.wakemehome.R.id.searchLocationInput);
 		_searchButton = (Button) _a.findViewById(com.davelabs.wakemehome.R.id.performSearchButton);
@@ -78,7 +78,7 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 	}
 	
 	public void testNoInternetLaunchesPopup() {	
-		_wirelessControl.setWiFiOff();
+		_wirelessControl.setWifiOff();
 		
 		TouchUtils.clickView(this, _searchButton);
 		AlertDialog popup = _a.getPopup();
@@ -94,6 +94,6 @@ public class MainActivityTests extends ActivityInstrumentationTestCase2<MainActi
 		assertEquals(monitor.getHits(), 1);
 		
 		_ins.removeMonitor(monitor);
-		_wirelessControl.setWiFiOn();
+		_wirelessControl.setWifiOn();
 	}
 }

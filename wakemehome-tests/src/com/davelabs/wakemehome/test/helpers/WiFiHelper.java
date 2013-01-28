@@ -3,18 +3,18 @@ package com.davelabs.wakemehome.test.helpers;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 
-public class WiFiHelper {
+public class WifiHelper {
 	
 	private WifiManager wifiManager;
 	
-	public WiFiHelper(Context c) {
+	public WifiHelper(Context c) {
 		wifiManager = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
 	}
 	
-	public void setWiFiOff() {
+	public void setWifiOff() {
         wifiManager.setWifiEnabled(false);
     }
-    public void setWiFiOn() {
+    public void setWifiOn() {
         wifiManager.setWifiEnabled(true);
     }
     public boolean isWiFiConnected() {
