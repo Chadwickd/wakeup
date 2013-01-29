@@ -30,7 +30,7 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		
 		MapPinPointActivity a = (MapPinPointActivity) getActivity();
 	
-		View overlay = (View) a.findViewById(R.id.progressOverlay);
+		View overlay = (View) a.findViewById(R.id.searchProgressOverlay);
 		ViewHelper.assertViewHides(overlay, 5);
 			
 		Dialog d = a.getSearchQueryNotFoundDialog();
@@ -44,11 +44,14 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		WifiHelper wifi = new WifiHelper(a);
 		wifi.setWifiOff();
 		
-		View overlay = (View) a.findViewById(R.id.progressOverlay);
+		View overlay = (View) a.findViewById(R.id.searchProgressOverlay);
 		ViewHelper.assertViewHides(overlay, 5);
 			
 		Dialog d = a.getSearchQueryLookupFailed();
 		assertTrue(d.isShowing());
+		
+		View loadingOverlay = (View) a.findViewById(R.id.searchProgressOverlay);
+		assertTrue(loadingOverlay.isShown());
 	}
 	
 	private void setIntentSearchQuery(String query) {
