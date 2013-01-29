@@ -81,7 +81,7 @@ public class MapPinPointActivity extends Activity {
 	}
 
 	private void hideOverlay() {
-		View v = this.findViewById(R.id.progressOverlay);
+		View v = this.findViewById(R.id.searchProgressOverlay);
 		v.setVisibility(View.INVISIBLE);
 	}
 
