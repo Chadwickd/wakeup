@@ -28,11 +28,12 @@
 
 	</RelativeLayout>
 	<RelativeLayout
-	    android:id="@+id/progressOverlay"
+	    android:id="@+id/searchProgressOverlay"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
 	    android:background="#000000"
-	    android:alpha="0.5">	
+	    android:alpha="0.5"
+	    android:visibility="invisible">	
 		<ProgressBar
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
