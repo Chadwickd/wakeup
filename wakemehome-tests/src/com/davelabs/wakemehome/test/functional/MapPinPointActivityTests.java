@@ -47,11 +47,18 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		View overlay = (View) a.findViewById(R.id.searchProgressOverlay);
 		ViewHelper.assertViewHides(overlay, 5);
 			
-		Dialog d = a.getSearchQueryLookupFailed();
+		Dialog d = a.getSearchQueryLookupFailedDialog();
 		assertTrue(d.isShowing());
 		
 		View loadingOverlay = (View) a.findViewById(R.id.searchProgressOverlay);
 		assertTrue(loadingOverlay.isShown());
+	}
+	
+	private void testNoInternetPolls() {
+		MapPinPointActivity a = (MapPinPointActivity) getActivity();
+		a.getSearchQueryLookupFailedDialog();
+		
+		assertTrue(false);
 	}
 	
 	private void setIntentSearchQuery(String query) {
@@ -60,10 +67,7 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		setActivityIntent(intent);
 	}
 	
-	private void testNoInternetPolls {
-		MapPinPointActivity a = (MapPinPointActivity) getActivity();
-		a.getSearchQueryLookupFailed();
-		
-		
-	}
+	
+	
+	
 }

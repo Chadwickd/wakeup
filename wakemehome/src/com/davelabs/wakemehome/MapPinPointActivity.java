@@ -62,8 +62,9 @@ public class MapPinPointActivity extends Activity {
 	private void searchQueryLookupFailed(Exception e) {
 		hideOverlay();
 		if (e instanceof IOException) {
-			Toast.makeText(this, "Unable to connect to google maps servers", Toast.LENGTH_LONG).show();
+			getSearchQueryLookupFailedDialog().show();
 		} else {
+			//this should never be hit
 			Toast.makeText(this, "Unknown error", Toast.LENGTH_LONG).show();
 		}
 	}
