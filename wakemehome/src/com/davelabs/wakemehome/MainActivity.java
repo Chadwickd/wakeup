@@ -2,16 +2,15 @@ package com.davelabs.wakemehome;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+
+import com.davelabs.wakemehome.helpers.NetworkHelper;
 
 public class MainActivity extends Activity {
 	private AlertDialog _popup;
@@ -30,9 +29,8 @@ public class MainActivity extends Activity {
     
     public void onSearchButtonClicked(View v)
     {
-    	if (!isOnline()) {
+    	if (!NetworkHelper.networkTurnedOn(this)) {
     		getPopup().show();
-    		
     	} else {
     		startSearchActivity();
     	}
@@ -47,17 +45,6 @@ public class MainActivity extends Activity {
     	intent.putExtra("searchQuery", searchQuery);
     	
     	startActivity(intent);
-    	
-    }
-    
-    public boolean isOnline() {
-        ConnectivityManager cm =
-            (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-            return true;
-        }
-        return false;
     }
 
 	public AlertDialog getPopup() {

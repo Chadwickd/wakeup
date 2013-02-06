@@ -8,8 +8,8 @@ import android.view.View;
 
 import com.davelabs.wakemehome.MapPinPointActivity;
 import com.davelabs.wakemehome.R;
+import com.davelabs.wakemehome.test.helpers.NetworkHelper;
 import com.davelabs.wakemehome.test.helpers.ViewHelper;
-import com.davelabs.wakemehome.test.helpers.WifiHelper;
 
 public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<MapPinPointActivity> {
 
@@ -17,7 +17,6 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 	
 	public MapPinPointActivityTests() {
 		super(MapPinPointActivity.class);
-		
 	}
 	
 	public void setUp()
@@ -41,8 +40,7 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		setIntentSearchQuery("EC1N 8NX");
 		MapPinPointActivity a = (MapPinPointActivity) getActivity();
 		
-		WifiHelper wifi = new WifiHelper(a);
-		wifi.setWifiOff();
+		NetworkHelper.turnNetworkOff(a);
 		
 		View overlay = (View) a.findViewById(R.id.searchProgressOverlay);
 		ViewHelper.assertViewHides(overlay, 5);
@@ -52,14 +50,17 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		
 		View loadingOverlay = (View) a.findViewById(R.id.searchProgressOverlay);
 		assertTrue(loadingOverlay.isShown());
+		NetworkHelper.turnNetworkOn(a);
 	}
 	
-	private void testNoInternetPolls() {
+	public void testNoInternetPolls() {
+		setIntentSearchQuery("ANYTHING");
 		MapPinPointActivity a = (MapPinPointActivity) getActivity();
 		a.getSearchQueryLookupFailedDialog();
 		
 		assertTrue(false);
 	}
+	
 	
 	private void setIntentSearchQuery(String query) {
 		Intent intent = new Intent();
