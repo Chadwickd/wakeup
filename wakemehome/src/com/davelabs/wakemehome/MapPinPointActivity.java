@@ -87,7 +87,7 @@ public class MapPinPointActivity extends Activity {
 	}
 
 	private void showPinPointMarker(LatLng result) {
-		Marker m = getPinPointMarker(result);
+		Marker m = createPinPointMarker(result);
 		m.setVisible(true);
 	}
 
@@ -117,9 +117,9 @@ public class MapPinPointActivity extends Activity {
 		return passedSearchType;
 	}
 	
-	public void onLocationOkButtonClicked (View v)  {
+	public void onLocationOkButtonClicked(View v)  {
     	Intent intent = new Intent(this, MapTrackingActivity.class);
-    	intent.putExtra("LocationCoords", _map.getCameraPosition());
+    	intent.putExtra("LocationCoords", _pinPointMarker.getPosition());
     	this.startActivity(intent);
     }
 	
@@ -170,7 +170,7 @@ public class MapPinPointActivity extends Activity {
 		return _searchQueryLookupFailedDialog;
 	}
 	
-	private Marker getPinPointMarker(LatLng position) {
+	private Marker createPinPointMarker(LatLng position) {
 		
 		if (_pinPointMarker == null) {
 			BitmapDescriptor marker = BitmapDescriptorFactory.defaultMarker();
