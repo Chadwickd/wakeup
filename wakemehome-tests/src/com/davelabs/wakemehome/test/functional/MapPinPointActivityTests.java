@@ -4,12 +4,14 @@ import android.app.Dialog;
 import android.app.Instrumentation;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.UiThreadTest;
 import android.view.View;
 
 import com.davelabs.wakemehome.MapPinPointActivity;
 import com.davelabs.wakemehome.R;
 import com.davelabs.wakemehome.test.helpers.NetworkHelper;
 import com.davelabs.wakemehome.test.helpers.UIHelper;
+import com.google.android.gms.maps.model.GroundOverlay;
 
 public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<MapPinPointActivity> {
 
@@ -36,6 +38,7 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		assertTrue(d.isShowing());
 	}
 	
+
 	public void testNoInternetWhenLookingUpAddress() {
 		setIntentSearchQuery("EC1N 8NX");
 		MapPinPointActivity a = (MapPinPointActivity) getActivity();
@@ -49,10 +52,10 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		UIHelper.assertViewHides(overlay, 5);
 			
 		Dialog d = a.getSearchQueryLookupFailedDialog();
-		assertTrue(d.isShowing());
+		UIHelper.assertDialogShows(d, 5);
 		
-		View loadingOverlay = (View) a.findViewById(R.id.searchProgressOverlay);
-		assertTrue(loadingOverlay.isShown());
+		//View loadingOverlay = (View) a.findViewById(R.id.searchProgressOverlay);
+		//assertTrue(loadingOverlay.isShown());
 		NetworkHelper.turnNetworkOn(a);
 	}
 	
@@ -76,8 +79,8 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		
 		NetworkHelper.turnNetworkOn(a);
 		
-		View pinPoint = a.findViewById(R.id.pinPoint);
-		UIHelper.assertViewShows(pinPoint, 5);
+		GroundOverlay marker = a.getPinPointMarker();
+		assertTrue(marker.isVisible());
 	}
 	
 	private void setIntentSearchQuery(String query) {
@@ -86,3 +89,4 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		setActivityIntent(intent);
 	}
 }
+

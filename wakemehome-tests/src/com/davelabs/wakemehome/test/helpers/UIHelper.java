@@ -21,7 +21,7 @@ public class UIHelper {
 		long startTime = System.currentTimeMillis();
 		long waitFor = timeout * 1000;
 		
-		while ((!v.isShown()) && (System.currentTimeMillis() < startTime + waitFor));
+		while ((v == null || !v.isShown()) && (System.currentTimeMillis() < startTime + waitFor));
 		
 		Assert.assertTrue("View did not display before the given timeout", v.isShown());
 			
@@ -38,4 +38,16 @@ public class UIHelper {
 			
 		return;
 	}
+	
+	public static void assertDialogShows(Dialog d, long timeout) {
+		long startTime = System.currentTimeMillis();
+		long waitFor = timeout * 1000;
+		
+		while ((d == null || !d.isShowing()) && (System.currentTimeMillis() < startTime + waitFor));
+		
+		Assert.assertTrue("Dialog did not show before the given timeout", d.isShowing());
+			
+		return;
+	}
+	
 }

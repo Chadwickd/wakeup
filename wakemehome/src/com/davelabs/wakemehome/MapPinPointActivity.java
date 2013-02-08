@@ -5,7 +5,6 @@ import java.io.IOException;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +15,11 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapPinPointActivity extends Activity {
 
@@ -24,6 +27,8 @@ public class MapPinPointActivity extends Activity {
 	
 	private Dialog _searchQueryNotFoundDialog;
 	private Dialog _searchQueryLookupFailedDialog;
+
+	private Marker _pinPointMarker;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +45,6 @@ public class MapPinPointActivity extends Activity {
 	}
 	
 	private void tryToLookupSearchQuery() {
-		final Context c = this;
 		String searchQuery = getPassedSearchQuery();
 		
 		LocationSearcher.ISearchListener listener = new LocationSearcher.ISearchListener() {
@@ -74,11 +78,17 @@ public class MapPinPointActivity extends Activity {
 		hideOverlay();
 		if (result != null) {
 			moveMapToTargetPoint(result);
+			showPinPointMarker(result);
 			showConfirmDestinationButton();
 		} else {
 			Dialog d = getSearchQueryNotFoundDialog();
 			d.show();
 		}
+	}
+
+	private void showPinPointMarker(LatLng result) {
+		Marker m = getPinPointMarker(result);
+		m.setVisible(true);
 	}
 
 	private void hideOverlay() {
@@ -119,7 +129,7 @@ public class MapPinPointActivity extends Activity {
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage("Unable to find the address, please try another search query.");
-			builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			builder.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					a.finish();
@@ -132,12 +142,14 @@ public class MapPinPointActivity extends Activity {
 		return _searchQueryNotFoundDialog;
 	}
 
-	public Dialog getSearchQueryLookupFailedDialog() {
-		if (_searchQueryLookupFailedDialog == null) {
+	private Dialog getSearchQueryLookupFailedDialog() {
+	
+		if (_searchQueryLookupFailedDialog == null)
+		{
 			final Activity a = this;
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("Unable to find the address, please try another search query.");
+			builder.setMessage("no internet.");
 			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -156,5 +168,19 @@ public class MapPinPointActivity extends Activity {
 		}
 		
 		return _searchQueryLookupFailedDialog;
+	}
+	
+	private Marker getPinPointMarker(LatLng position) {
+		
+		if (_pinPointMarker == null) {
+			BitmapDescriptor marker = BitmapDescriptorFactory.defaultMarker();
+			_pinPointMarker = _map.addMarker(new MarkerOptions()
+		      .icon(marker)
+		      .position(position)
+		      .draggable(true)
+		    );
+		}
+
+		return _pinPointMarker;
 	}
 }
