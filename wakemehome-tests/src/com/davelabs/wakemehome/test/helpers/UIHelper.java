@@ -16,6 +16,17 @@ public class UIHelper {
 			
 		return;
 	}
+
+	public static void assertViewShows(View v, long timeout) {
+		long startTime = System.currentTimeMillis();
+		long waitFor = timeout * 1000;
+		
+		while ((!v.isShown()) && (System.currentTimeMillis() < startTime + waitFor));
+		
+		Assert.assertTrue("View did not display before the given timeout", v.isShown());
+			
+		return;
+	}
 	
 	public static void assertDialogHides(Dialog d, long timeout) {
 		long startTime = System.currentTimeMillis();

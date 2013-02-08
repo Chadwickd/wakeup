@@ -69,6 +69,17 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		assertEquals(true, false);
 	}
 
+	public void testPinPointShowsForValidLocation()
+	{
+		setIntentSearchQuery("EC1N 8NX");
+		MapPinPointActivity a = (MapPinPointActivity) getActivity();
+		
+		NetworkHelper.turnNetworkOn(a);
+		
+		View pinPoint = a.findViewById(R.id.pinPoint);
+		UIHelper.assertViewShows(pinPoint, 5);
+	}
+	
 	private void setIntentSearchQuery(String query) {
 		Intent intent = new Intent();
 		intent.putExtra("searchQuery", query);
