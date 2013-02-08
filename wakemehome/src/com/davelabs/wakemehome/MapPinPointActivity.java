@@ -56,6 +56,7 @@ public class MapPinPointActivity extends Activity {
 		};
 		
 		LocationSearcher searcher = new LocationSearcher(listener);
+		showOverlay();
 		searcher.startSearch(new GeocoderSearchProvider(this), searchQuery);
 	}
 	
@@ -83,6 +84,11 @@ public class MapPinPointActivity extends Activity {
 	private void hideOverlay() {
 		View v = this.findViewById(R.id.searchProgressOverlay);
 		v.setVisibility(View.INVISIBLE);
+	}
+	
+	private void showOverlay() {
+		View v = this.findViewById(R.id.searchProgressOverlay);
+		v.setVisibility(View.VISIBLE);
 	}
 
 	private void showConfirmDestinationButton() {

@@ -9,7 +9,7 @@ import android.view.View;
 import com.davelabs.wakemehome.MapPinPointActivity;
 import com.davelabs.wakemehome.R;
 import com.davelabs.wakemehome.test.helpers.NetworkHelper;
-import com.davelabs.wakemehome.test.helpers.ViewHelper;
+import com.davelabs.wakemehome.test.helpers.UIHelper;
 
 public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<MapPinPointActivity> {
 
@@ -30,7 +30,7 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		MapPinPointActivity a = (MapPinPointActivity) getActivity();
 	
 		View overlay = (View) a.findViewById(R.id.searchProgressOverlay);
-		ViewHelper.assertViewHides(overlay, 5);
+		UIHelper.assertViewHides(overlay, 5);
 			
 		Dialog d = a.getSearchQueryNotFoundDialog();
 		assertTrue(d.isShowing());
@@ -40,10 +40,13 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 		setIntentSearchQuery("EC1N 8NX");
 		MapPinPointActivity a = (MapPinPointActivity) getActivity();
 		
+		//Hopefully this runs quickly enough after the activity has been started by getActivity().
+		//It doesn't seem to be possible to turn it off without creating the activity as a context
+		//is required.
 		NetworkHelper.turnNetworkOff(a);
 		
 		View overlay = (View) a.findViewById(R.id.searchProgressOverlay);
-		ViewHelper.assertViewHides(overlay, 5);
+		UIHelper.assertViewHides(overlay, 5);
 			
 		Dialog d = a.getSearchQueryLookupFailedDialog();
 		assertTrue(d.isShowing());
@@ -56,19 +59,19 @@ public class MapPinPointActivityTests extends ActivityInstrumentationTestCase2<M
 	public void testNoInternetPolls() {
 		setIntentSearchQuery("ANYTHING");
 		MapPinPointActivity a = (MapPinPointActivity) getActivity();
-		a.getSearchQueryLookupFailedDialog();
 		
-		assertTrue(false);
+		NetworkHelper.turnNetworkOff(a);
+		
+		Dialog d = a.getSearchQueryLookupFailedDialog();
+		assertTrue(d.isShowing());
+		
+		//Force failure
+		assertEquals(true, false);
 	}
-	
-	
+
 	private void setIntentSearchQuery(String query) {
 		Intent intent = new Intent();
 		intent.putExtra("searchQuery", query);
 		setActivityIntent(intent);
 	}
-	
-	
-	
-	
 }
