@@ -1,11 +1,6 @@
 package com.davelabs.wakemehome;
 
-import java.util.List;
-
 import android.app.Activity;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -40,7 +35,7 @@ public class MapTrackingActivity extends Activity {
         _passedPosition = extractPassedPosition();
         showPinPointMarker(_passedPosition);
         
-        getCurrentLocation();
+        trackCurrentLocation();
     }
 
 	private LatLngBounds getCameraBounds() {
@@ -51,30 +46,24 @@ public class MapTrackingActivity extends Activity {
 		
 	}
 
-	private void getCurrentLocation() {
-		LocationManager lm = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-		List<String> providers = lm.getProviders(true);
-		for (String provider : providers) {
-			lm.requestSingleUpdate(provider, new LocationListener() {
+	private void trackCurrentLocation() {
+		CurrentPositionTracker tracker = new CurrentPositionTracker(
+			new CurrentPositionTracker.CurrentPositionListener() {
+
 				@Override
-				public void onLocationChanged(Location loc) {
-					onLocationFound(loc);
+				public void currentPositionChanged(LatLng newPosition) {
+					onCurrentPositionChanged(newPosition);
 				}
 				
-				@Override
-				public void onProviderDisabled(String arg0) {}
-				@Override
-				public void onProviderEnabled(String arg0) {}
-				@Override
-				public void onStatusChanged(String arg0, int arg1, Bundle arg2) {}
-				
-			}, this.getMainLooper());
-		}
+			}
+		);
+		
+		tracker.track(this);
 	}
 
-	protected void onLocationFound(Location currentLocation) {
+	protected void onCurrentPositionChanged(LatLng currentPosition) {
 		if (_currentLocation == null) {
-			_currentLocation = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+			_currentLocation = currentPosition;
 			 LatLngBounds cameraBounds = getCameraBounds();
 		     CameraUpdate moveToCurrentLocation = CameraUpdateFactory.newLatLngBounds(cameraBounds, BOUNDS_PADDING);
 		     moveMapToTargetPoint(moveToCurrentLocation);
@@ -82,7 +71,6 @@ public class MapTrackingActivity extends Activity {
 	}
 
 	private void moveMapToTargetPoint(CameraUpdate targetPoint) {
-		
 		_map.animateCamera(targetPoint);
 	}
 
