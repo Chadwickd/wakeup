@@ -9,6 +9,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -18,10 +19,10 @@ public class MapTrackingActivity extends Activity {
 	
 	private GoogleMap _map;
 	private Marker _pinPointMarker;
-	private LatLng _passedPosition;
 	private boolean _isZoomedOnCurrentLocation;
 	private boolean _isZoomingOnCurrentLocation;
-	private LatLng _currentPosition;
+	private LatLng _currentLocation;
+	private LatLng _targetLocation;
 	final private static int BOUNDS_PADDING = 100;
 
 	
@@ -38,22 +39,12 @@ public class MapTrackingActivity extends Activity {
         _map.setMyLocationEnabled(true);
         _map.getUiSettings().setMyLocationButtonEnabled(true);
         
-        _passedPosition = extractPassedPosition();
-        showPinPointMarker(_passedPosition);
+        CameraPosition targetCameraPosition = extractTargetCameraPosition();
+        showPinPointMarker();
         
-        CameraUpdate startInPassedPosition = CameraUpdateFactory.newLatLng(_passedPosition);
-        CameraUpdate zoomToPassedPosition = CameraUpdateFactory.zoomTo(15);
-        _map.moveCamera(startInPassedPosition);
-        _map.animateCamera(zoomToPassedPosition, new GoogleMap.CancelableCallback() {
-			
-			@Override
-			public void onFinish() {				
-				trackCurrentLocation();
-			}
-			
-			@Override
-			public void onCancel() {}
-		});
+        CameraUpdate toTargetPosition = CameraUpdateFactory.newCameraPosition(targetCameraPosition);
+        _map.moveCamera(toTargetPosition);
+        trackCurrentLocation();
     }
 
 	private LatLngBounds getCameraBounds(LatLng currentLocation, LatLng targetPosition) {
@@ -79,16 +70,16 @@ public class MapTrackingActivity extends Activity {
 		tracker.track(this);
 	}
 
-	protected void onCurrentPositionChanged(LatLng currentPosition) {
-		_currentPosition = currentPosition;
+	protected void onCurrentPositionChanged(LatLng currentLocation) {
+		_currentLocation = currentLocation;
 		if (!_isZoomingOnCurrentLocation){
 			if (!_isZoomedOnCurrentLocation) {
 				 _isZoomingOnCurrentLocation = true;
-				 LatLngBounds cameraBounds = getCameraBounds(currentPosition, _passedPosition);
+				 LatLngBounds cameraBounds = getCameraBounds(currentLocation, _targetLocation);
 			     CameraUpdate moveToBoundedCurrentLocation = CameraUpdateFactory.newLatLngBounds(cameraBounds, BOUNDS_PADDING);
 			     moveMapToBoundedTargetPoint(moveToBoundedCurrentLocation);
 			} else { 
-			     animateMapToTargetPoint(currentPosition);
+			     animateMapToTargetPoint(currentLocation);
 			}
 		}
 	}
@@ -100,7 +91,7 @@ public class MapTrackingActivity extends Activity {
 			public void onFinish() {
 				_isZoomedOnCurrentLocation = true;
 				_isZoomingOnCurrentLocation = false;
-				animateMapToTargetPoint(_currentPosition);
+				animateMapToTargetPoint(_currentLocation);
 			}
 			
 			@Override
@@ -109,20 +100,21 @@ public class MapTrackingActivity extends Activity {
 	}
 	
 	private void animateMapToTargetPoint(LatLng targetPoint) {
-		 CameraUpdate moveToCurrentLocation = CameraUpdateFactory.newLatLng(targetPoint);
+		 CameraUpdate moveToCurrentLocation = CameraUpdateFactory.newLatLngZoom(targetPoint,_map.getMaxZoomLevel() - 3);
 		_map.animateCamera(moveToCurrentLocation);
 	}
 	
 	
 
-	private LatLng extractPassedPosition() {
+	private CameraPosition extractTargetCameraPosition() {
         Bundle extras = this.getIntent().getExtras();
-        LatLng passedPosition = (LatLng) extras.get("LocationCoords");
-		return passedPosition;
+        CameraPosition targetPosition = (CameraPosition) extras.get("CameraPosition");
+        _targetLocation = targetPosition.target;
+		return targetPosition;
 	}
 
-	private void showPinPointMarker(LatLng result) {
-		Marker m = createPinPointMarker(result);
+	private void showPinPointMarker() {
+		Marker m = createPinPointMarker(_targetLocation);
 		m.setVisible(true);
 	}
 	

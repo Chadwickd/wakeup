@@ -17,6 +17,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -119,7 +120,9 @@ public class MapPinPointActivity extends Activity {
 	
 	public void onLocationOkButtonClicked(View v)  {
     	Intent intent = new Intent(this, MapTrackingActivity.class);
-    	intent.putExtra("LocationCoords", _pinPointMarker.getPosition());
+    	CameraPosition.Builder b = CameraPosition.builder(_map.getCameraPosition());
+    	b.target(_pinPointMarker.getPosition());
+    	intent.putExtra("CameraPosition", b.build());
     	this.startActivity(intent);
     }
 	
