@@ -18,14 +18,20 @@ public class MapTrackingActivity extends Activity {
 	
 	private GoogleMap _map;
 	private Marker _pinPointMarker;
-	private LatLng _currentLocation;
 	private LatLng _passedPosition;
+	private boolean _isZoomedOnCurrentLocation;
+	private boolean _isZoomingOnCurrentLocation;
+	private LatLng _currentPosition;
 	final private static int BOUNDS_PADDING = 100;
+
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_tracking);
+        
+        _isZoomedOnCurrentLocation = false;
+        _isZoomingOnCurrentLocation = false;
         
         MapFragment f = (MapFragment) this.getFragmentManager().findFragmentById(R.id.trackMap);
         _map = f.getMap();
@@ -35,13 +41,25 @@ public class MapTrackingActivity extends Activity {
         _passedPosition = extractPassedPosition();
         showPinPointMarker(_passedPosition);
         
-        trackCurrentLocation();
+        CameraUpdate startInPassedPosition = CameraUpdateFactory.newLatLng(_passedPosition);
+        CameraUpdate zoomToPassedPosition = CameraUpdateFactory.zoomTo(15);
+        _map.moveCamera(startInPassedPosition);
+        _map.animateCamera(zoomToPassedPosition, new GoogleMap.CancelableCallback() {
+			
+			@Override
+			public void onFinish() {				
+				trackCurrentLocation();
+			}
+			
+			@Override
+			public void onCancel() {}
+		});
     }
 
-	private LatLngBounds getCameraBounds() {
+	private LatLngBounds getCameraBounds(LatLng currentLocation, LatLng targetPosition) {
 		LatLngBounds.Builder builder = LatLngBounds.builder();
-		builder.include(_passedPosition);
-		builder.include(_currentLocation);
+		builder.include(targetPosition);
+		builder.include(currentLocation);
 		return builder.build();
 		
 	}
@@ -62,17 +80,40 @@ public class MapTrackingActivity extends Activity {
 	}
 
 	protected void onCurrentPositionChanged(LatLng currentPosition) {
-		if (_currentLocation == null) {
-			_currentLocation = currentPosition;
-			 LatLngBounds cameraBounds = getCameraBounds();
-		     CameraUpdate moveToCurrentLocation = CameraUpdateFactory.newLatLngBounds(cameraBounds, BOUNDS_PADDING);
-		     moveMapToTargetPoint(moveToCurrentLocation);
+		_currentPosition = currentPosition;
+		if (!_isZoomingOnCurrentLocation){
+			if (!_isZoomedOnCurrentLocation) {
+				 _isZoomingOnCurrentLocation = true;
+				 LatLngBounds cameraBounds = getCameraBounds(currentPosition, _passedPosition);
+			     CameraUpdate moveToBoundedCurrentLocation = CameraUpdateFactory.newLatLngBounds(cameraBounds, BOUNDS_PADDING);
+			     moveMapToBoundedTargetPoint(moveToBoundedCurrentLocation);
+			} else { 
+			     animateMapToTargetPoint(currentPosition);
+			}
 		}
 	}
 
-	private void moveMapToTargetPoint(CameraUpdate targetPoint) {
-		_map.animateCamera(targetPoint);
+	private void moveMapToBoundedTargetPoint(CameraUpdate targetPoint) {
+		_map.animateCamera(targetPoint,new GoogleMap.CancelableCallback() {
+			
+			@Override
+			public void onFinish() {
+				_isZoomedOnCurrentLocation = true;
+				_isZoomingOnCurrentLocation = false;
+				animateMapToTargetPoint(_currentPosition);
+			}
+			
+			@Override
+			public void onCancel() {}
+		});
 	}
+	
+	private void animateMapToTargetPoint(LatLng targetPoint) {
+		 CameraUpdate moveToCurrentLocation = CameraUpdateFactory.newLatLng(targetPoint);
+		_map.animateCamera(moveToCurrentLocation);
+	}
+	
+	
 
 	private LatLng extractPassedPosition() {
         Bundle extras = this.getIntent().getExtras();

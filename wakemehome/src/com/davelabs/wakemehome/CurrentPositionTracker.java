@@ -1,7 +1,5 @@
 package com.davelabs.wakemehome;
 
-import java.util.List;
-
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
@@ -55,27 +53,6 @@ public class CurrentPositionTracker implements LocationListener {
 		
 		return (pointDelta > radiusSum);
 	}
-//	
-//	private double getLocationDeltaInMetres(Location newLocation, Location currentLocation) {
-//		double earthRadius = 6372.8;
-//		double newLat = newLocation.getLatitude();
-//		double currentLat = newLocation.getLatitude();
-//		double deltaLat =  newLat - currentLat; 
-//		double deltaLong = newLocation.getLongitude() - currentLocation.getLongitude();
-//		
-//		double dLatRad = Math.toRadians(deltaLat);
-//		double dLonRad = Math.toRadians(deltaLong);
-//		
-//		double a = (
-//				    Math.sin(dLatRad / 2) * Math.sin(dLatRad / 2)
-//				   ) + 
-//				   (
-//					Math.sin(dLonRad / 2) * Math.sin(dLonRad / 2) * Math.cos(currentLat) * Math.cos(newLat)
-//				   );
-//		
-//		double c = 2 * Math.asin(Math.sqrt(a));
-//		return earthRadius * c;
-//	}
 
 	@Override
 	public void onProviderDisabled(String provider) {}
