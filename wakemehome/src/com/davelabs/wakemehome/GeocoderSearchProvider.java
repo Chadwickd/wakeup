@@ -9,7 +9,7 @@ import android.location.Geocoder;
 
 import com.google.android.gms.maps.model.LatLng;
 
-public class GeocoderSearchProvider implements ISearchProvider {
+public class GeocoderSearchProvider implements SearchProvider {
 
 	private Context _context;
 	
