@@ -56,7 +56,7 @@ public class MapTrackingActivity extends Activity {
 	}
 
 	private void trackCurrentLocation() {
-		CurrentPositionTracker tracker = new CurrentPositionTracker(
+		CurrentPositionTracker tracker = new CurrentPositionTracker(this,
 			new CurrentPositionTracker.CurrentPositionListener() {
 
 				@Override
@@ -67,7 +67,7 @@ public class MapTrackingActivity extends Activity {
 			}
 		);
 		
-		tracker.track(this);
+		tracker.track();
 	}
 
 	protected void onCurrentPositionChanged(LatLng currentLocation) {
