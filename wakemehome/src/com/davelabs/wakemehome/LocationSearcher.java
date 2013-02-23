@@ -12,7 +12,7 @@ public class LocationSearcher implements Runnable {
 	}
 	
 	private String _query;
-	private ISearchProvider _provider;
+	private SearchProvider _provider;
 	private ISearchListener _listener;
 	
 	private Handler _handler;
@@ -42,7 +42,7 @@ public class LocationSearcher implements Runnable {
 		}
 	}
 
-	public void startSearch(ISearchProvider provider, String searchQuery) {
+	public void startSearch(SearchProvider provider, String searchQuery) {
 		_query = searchQuery;
 		_provider = provider;
 		

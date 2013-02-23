@@ -64,5 +64,8 @@ public class MainActivity extends Activity {
 	    }
 	};
 
-	
+	public void onTakeHomeButtonClicked(View v)
+	{
+		
+	}
 }
