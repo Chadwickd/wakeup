@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 
 import com.davelabs.wakemehome.SearchedLocation;
 import com.google.android.gms.maps.model.LatLng;
@@ -13,6 +14,10 @@ import com.google.android.gms.maps.model.LatLng;
 public class PreferencesFileSearchedLocationStore implements
 		SearchedLocationStore {
 
+	private static final String PREF_HOME_QUERY = "homeLocationQuery";
+	private static final String PREF_HOME_LAT = "homeLocationLat";
+	private static final String PREF_HOME_LNG = "homeLocationLng";
+	
 	private SharedPreferences _preferences;
 
 	public PreferencesFileSearchedLocationStore(Context context)
@@ -40,18 +45,25 @@ public class PreferencesFileSearchedLocationStore implements
 
 	@Override
 	public void saveLocation(SearchedLocation location) {
-		// TODO Auto-generated method stub
+		Editor e = _preferences.edit();
 		
+		e.putString(PREF_HOME_QUERY, location.getSearchQuery());
+		
+		LatLng latLng = location.getTarget();
+		e.putFloat(PREF_HOME_LAT, (float)latLng.latitude);
+		e.putFloat(PREF_HOME_LNG, (float)latLng.longitude);
+		
+		e.commit();
 	}	
 
 	private SearchedLocation getHomeLocationFromPreferences() {
 		SearchedLocation homeLocation = null;
 		
-		String homeLocationQuery = _preferences.getString("homeLocationQuery", null);
+		String homeLocationQuery = _preferences.getString(PREF_HOME_QUERY, null);
 		
 		if (homeLocationQuery != null) {
-			float lat = _preferences.getFloat("homeLocationLat", 0);
-			float lng = _preferences.getFloat("homeLocationLong", 0);
+			float lat = _preferences.getFloat(PREF_HOME_LAT, 0);
+			float lng = _preferences.getFloat(PREF_HOME_LNG, 0);
 
 			LatLng latLng = new LatLng(lat, lng);
 			
