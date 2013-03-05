@@ -14,7 +14,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class CurrentPositionTracker implements LocationListener {
 	
 	public interface CurrentPositionListener {
-		public void currentPositionChanged(LatLng newPosition);
+		public void onCurrentPositionChanged(LatLng newPosition);
 	}
 
 	private CurrentPositionListener _listener;
@@ -80,7 +80,7 @@ public class CurrentPositionTracker implements LocationListener {
 		_currentLocation = location;
 		
 		LatLng newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-		_listener.currentPositionChanged(newLatLng);
+		_listener.onCurrentPositionChanged(newLatLng);
 	}
 
 	private boolean isAtLeastAsAccurate(Location newLocation) {

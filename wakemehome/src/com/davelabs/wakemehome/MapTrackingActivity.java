@@ -3,6 +3,9 @@ package com.davelabs.wakemehome;
 import android.app.Activity;
 import android.os.Bundle;
 
+import com.davelabs.wakemehome.camera.CameraDirector.CameraUpdateListener;
+import com.davelabs.wakemehome.camera.CameraDirector;
+import com.davelabs.wakemehome.camera.TrackingCameraDirector;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,6 +26,7 @@ public class MapTrackingActivity extends Activity {
 	private boolean _isZoomingOnCurrentLocation;
 	private LatLng _currentLocation;
 	private LatLng _targetLocation;
+	private TrackingCameraDirector _director;
 	final private static int BOUNDS_PADDING = 100;
 
 	
@@ -42,6 +46,15 @@ public class MapTrackingActivity extends Activity {
         CameraPosition targetCameraPosition = extractTargetCameraPosition();
         showPinPointMarker();
         
+        CameraUpdateListener cameraListener = new CameraUpdateListener() {
+			@Override
+			public void onCameraUpdate(CameraUpdate update) {
+				_map.moveCamera(update);
+			}
+		};
+		
+        _director = new TrackingCameraDirector(cameraListener);
+        
         CameraUpdate toTargetPosition = CameraUpdateFactory.newCameraPosition(targetCameraPosition);
         _map.moveCamera(toTargetPosition);
         trackCurrentLocation();
@@ -60,8 +73,9 @@ public class MapTrackingActivity extends Activity {
 			new CurrentPositionTracker.CurrentPositionListener() {
 
 				@Override
-				public void currentPositionChanged(LatLng newPosition) {
-					onCurrentPositionChanged(newPosition);
+				public void onCurrentPositionChanged(LatLng newPosition) {
+					//MapTrackingActivity.this.onCurrentPositionChanged(newPosition);
+					_director.aimForNewTarget(newPosition);
 				}
 				
 			}
@@ -72,6 +86,7 @@ public class MapTrackingActivity extends Activity {
 
 	protected void onCurrentPositionChanged(LatLng currentLocation) {
 		_currentLocation = currentLocation;
+		
 		if (!_isZoomingOnCurrentLocation){
 			if (!_isZoomedOnCurrentLocation) {
 				 _isZoomingOnCurrentLocation = true;
@@ -99,10 +114,13 @@ public class MapTrackingActivity extends Activity {
 		});
 	}
 	
-	private void animateMapToTargetPoint(LatLng targetPoint) {
-		 CameraUpdate moveToCurrentLocation = CameraUpdateFactory.newLatLngZoom(targetPoint,_map.getMaxZoomLevel() - 3);
+	private void animateMapToTargetPoint() {
+		_cameraDirector.animateMapToTargetPoint
 		_map.animateCamera(moveToCurrentLocation);
 	}
+	
+	
+	
 	
 	
 
@@ -127,7 +145,6 @@ public class MapTrackingActivity extends Activity {
 		      .draggable(false)
 		    );
 		}
-
 		return _pinPointMarker;
 	}
 	
