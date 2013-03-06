@@ -8,16 +8,22 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.davelabs.wakemehome.helpers.NetworkHelper;
+import com.davelabs.wakemehome.persistence.SearchedLocationStore;
+import com.davelabs.wakemehome.persistence.SearchedLocationStoreFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 
 public class MainActivity extends Activity {
 	private AlertDialog _popup;
+	private SearchedLocationStore _store;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        populateGUIWithStoredLocations();
     }
 
     @Override
@@ -27,7 +33,23 @@ public class MainActivity extends Activity {
         return true;
     }
     
-    public void onSearchButtonClicked(View v)
+    private void populateGUIWithStoredLocations() {
+    	_store = SearchedLocationStoreFactory.getStore(this);
+		populateHomeLocation();
+	}
+
+	private void populateHomeLocation() {
+		SearchedLocation homeLocation = _store.getHomeLocation();
+		
+		if (homeLocation != null) {
+			Button takeHomeButton = (Button)this.findViewById(R.id.performTakeHomeButton);
+			String takeHomeString = this.getString(R.string.perform_take_home);
+			takeHomeButton.setText(takeHomeString + ": " + homeLocation.getSearchQuery());
+			takeHomeButton.setEnabled(true);
+		}
+	}
+
+	public void onSearchButtonClicked(View v)
     {
     	if (!NetworkHelper.networkTurnedOn(this)) {
     		getPopup().show();
@@ -36,7 +58,17 @@ public class MainActivity extends Activity {
     	}
     }
     
-    private void startSearchActivity() {
+    private AlertDialog getPopup() {
+		if (_popup == null) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("You don't seem to have internet, we will take you to the settings page to turn it on. Press back to return when you are done");
+			builder.setPositiveButton("Go", dialogClickListener);
+			_popup = builder.create();
+		}
+		return _popup;
+	}
+
+	private void startSearchActivity() {
     	
     	EditText searchInput = (EditText) this.findViewById(R.id.searchLocationInput);
     	String searchQuery = searchInput.getText().toString();
@@ -47,16 +79,6 @@ public class MainActivity extends Activity {
     	startActivity(intent);
     }
 
-	public AlertDialog getPopup() {
-		if (_popup == null) {
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("You don't seem to have internet, we will take you to the settings page to turn it on. Press back to return when you are done");
-			builder.setPositiveButton("Go", dialogClickListener);
-			_popup = builder.create();
-		}
-		return _popup;
-	}
-	
 	private DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 	    @Override
 	    public void onClick(DialogInterface dialog, int which) {
@@ -64,8 +86,15 @@ public class MainActivity extends Activity {
 	    }
 	};
 
-	public void onTakeHomeButtonClicked(View v)
-	{
+	public void onTakeHomeButtonClicked(View v) {
+		SearchedLocation home = _store.getHomeLocation();
+		CameraPosition.Builder builder = CameraPosition.builder();
+		builder.target(home.getTarget());
+		CameraPosition position = builder.build();
 		
+		Intent i = new Intent(this, MapTrackingActivity.class);
+		i.putExtra("CameraPosition", position);
+		
+		startActivity(i);
 	}
 }

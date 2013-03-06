@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.davelabs.wakemehome.persistence.SearchedLocationStore;
+import com.davelabs.wakemehome.persistence.SearchedLocationStoreFactory;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,6 +32,8 @@ public class MapPinPointActivity extends Activity {
 	private Dialog _searchQueryLookupFailedDialog;
 
 	private Marker _pinPointMarker;
+
+	private String _searchQuery;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +41,8 @@ public class MapPinPointActivity extends Activity {
         setContentView(R.layout.map_pinpoint);
         setInstanceVariables();
         
-        tryToLookupSearchQuery();
+        _searchQuery = getPassedSearchQuery();
+        tryToLookupSearchQuery(_searchQuery);
     }
 
 	private void setInstanceVariables() {        
@@ -45,8 +50,7 @@ public class MapPinPointActivity extends Activity {
         _map = f.getMap();
 	}
 	
-	private void tryToLookupSearchQuery() {
-		String searchQuery = getPassedSearchQuery();
+	private void tryToLookupSearchQuery(String searchQuery) {
 		
 		LocationSearcher.ISearchListener listener = new LocationSearcher.ISearchListener() {
 			@Override
@@ -122,10 +126,19 @@ public class MapPinPointActivity extends Activity {
     	Intent intent = new Intent(this, MapTrackingActivity.class);
     	CameraPosition.Builder b = CameraPosition.builder(_map.getCameraPosition());
     	b.target(_pinPointMarker.getPosition());
+    	
+    	storeLocationAsHome(_pinPointMarker);
+    	
     	intent.putExtra("CameraPosition", b.build());
     	this.startActivity(intent);
     }
 	
+	private void storeLocationAsHome(Marker m) {
+		SearchedLocationStore store = SearchedLocationStoreFactory.getStore(this);
+		SearchedLocation location = new SearchedLocation(_searchQuery, m.getPosition());
+		store.saveLocation(location);
+	}
+
 	public Dialog getSearchQueryNotFoundDialog() {
 		if (_searchQueryNotFoundDialog == null) {
 			final Activity a = this;
@@ -152,7 +165,7 @@ public class MapPinPointActivity extends Activity {
 			final Activity a = this;
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("no internet.");
+			builder.setMessage("No internet available");
 			builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -160,10 +173,10 @@ public class MapPinPointActivity extends Activity {
 				}
 			});
 			
-			builder.setPositiveButton("Retry Now", new DialogInterface.OnClickListener() {
+			builder.setPositiveButton("Retry now", new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					tryToLookupSearchQuery();
+					tryToLookupSearchQuery(_searchQuery);
 				}
 			});
 			

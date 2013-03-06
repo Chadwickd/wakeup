@@ -11,8 +11,7 @@ import com.davelabs.wakemehome.SearchedLocation;
 import com.google.android.gms.maps.model.LatLng;
 
 //Simple SearchedLocationStore implementation that saves a single location only
-public class PreferencesFileSearchedLocationStore implements
-		SearchedLocationStore {
+public class PreferencesFileSearchedLocationStore implements SearchedLocationStore {
 
 	private static final String PREF_HOME_QUERY = "homeLocationQuery";
 	private static final String PREF_HOME_LAT = "homeLocationLat";
