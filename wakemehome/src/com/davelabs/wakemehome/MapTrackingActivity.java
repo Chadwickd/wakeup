@@ -3,9 +3,8 @@ package com.davelabs.wakemehome;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.davelabs.wakemehome.camera.CameraDirector.CameraUpdateListener;
 import com.davelabs.wakemehome.camera.CameraDirector;
-import com.davelabs.wakemehome.camera.TrackingCameraDirector;
+import com.davelabs.wakemehome.camera.MapTrackingCameraDirector;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,9 +24,7 @@ public class MapTrackingActivity extends Activity {
 	private boolean _isZoomedOnCurrentLocation;
 	private boolean _isZoomingOnCurrentLocation;
 	private LatLng _currentLocation;
-	private LatLng _targetLocation;
-	private TrackingCameraDirector _director;
-	final private static int BOUNDS_PADDING = 100;
+	private MapTrackingCameraDirector _director;
 
 	
     @Override
@@ -44,29 +41,24 @@ public class MapTrackingActivity extends Activity {
         _map.getUiSettings().setMyLocationButtonEnabled(true);
         
         CameraPosition targetCameraPosition = extractTargetCameraPosition();
-        showPinPointMarker();
+        showPinPointMarker(targetCameraPosition.target);
         
-        CameraUpdateListener cameraListener = new CameraUpdateListener() {
+        CameraDirector.CameraUpdateListener cameraListener = new CameraDirector.CameraUpdateListener() {
 			@Override
 			public void onCameraUpdate(CameraUpdate update) {
-				_map.moveCamera(update);
+				//might need to update this to callback to the camera director when we are ready to move again
+				_map.animateCamera(update);
 			}
 		};
 		
-        _director = new TrackingCameraDirector(cameraListener);
+        _director = new MapTrackingCameraDirector(cameraListener, _map, targetCameraPosition);
         
-        CameraUpdate toTargetPosition = CameraUpdateFactory.newCameraPosition(targetCameraPosition);
-        _map.moveCamera(toTargetPosition);
+        
+        _director.startDirecting();
         trackCurrentLocation();
     }
 
-	private LatLngBounds getCameraBounds(LatLng currentLocation, LatLng targetPosition) {
-		LatLngBounds.Builder builder = LatLngBounds.builder();
-		builder.include(targetPosition);
-		builder.include(currentLocation);
-		return builder.build();
-		
-	}
+	
 
 	private void trackCurrentLocation() {
 		CurrentPositionTracker tracker = new CurrentPositionTracker(this,
@@ -84,20 +76,6 @@ public class MapTrackingActivity extends Activity {
 		tracker.track();
 	}
 
-	protected void onCurrentPositionChanged(LatLng currentLocation) {
-		_currentLocation = currentLocation;
-		
-		if (!_isZoomingOnCurrentLocation){
-			if (!_isZoomedOnCurrentLocation) {
-				 _isZoomingOnCurrentLocation = true;
-				 LatLngBounds cameraBounds = getCameraBounds(currentLocation, _targetLocation);
-			     CameraUpdate moveToBoundedCurrentLocation = CameraUpdateFactory.newLatLngBounds(cameraBounds, BOUNDS_PADDING);
-			     moveMapToBoundedTargetPoint(moveToBoundedCurrentLocation);
-			} else { 
-			     animateMapToTargetPoint(currentLocation);
-			}
-		}
-	}
 
 	private void moveMapToBoundedTargetPoint(CameraUpdate targetPoint) {
 		_map.animateCamera(targetPoint,new GoogleMap.CancelableCallback() {
@@ -118,21 +96,15 @@ public class MapTrackingActivity extends Activity {
 		_cameraDirector.animateMapToTargetPoint
 		_map.animateCamera(moveToCurrentLocation);
 	}
-	
-	
-	
-	
-	
 
 	private CameraPosition extractTargetCameraPosition() {
-        Bundle extras = this.getIntent().getExtras();
+		Bundle extras = this.getIntent().getExtras();
         CameraPosition targetPosition = (CameraPosition) extras.get("CameraPosition");
-        _targetLocation = targetPosition.target;
 		return targetPosition;
 	}
 
-	private void showPinPointMarker() {
-		Marker m = createPinPointMarker(_targetLocation);
+	private void showPinPointMarker(LatLng targetLocation) {
+		Marker m = createPinPointMarker(targetLocation);
 		m.setVisible(true);
 	}
 	

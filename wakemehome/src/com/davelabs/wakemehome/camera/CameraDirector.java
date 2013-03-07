@@ -18,5 +18,5 @@ public abstract class CameraDirector {
 		_listener.onCameraUpdate(update);
 	}
 	
-	public abstract void startDirector();
+	public abstract void startDirecting();
 }
