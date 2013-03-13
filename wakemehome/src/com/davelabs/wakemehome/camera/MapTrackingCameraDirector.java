@@ -13,6 +13,9 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	private LatLng _currentTarget;
 	private LatLng _homeLocation;
 	private CameraPosition _homeCameraPosition;
+	
+	private boolean _isZoomedOnCurrentLocation;
+	private boolean _isZoomingOnCurrentLocation;
 
 	private GoogleMap _map;
 	private boolean _isTracking;
@@ -42,17 +45,32 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	@Override
 	public void startDirecting() {
 		_startTime = System.currentTimeMillis();
-		aimAtHome();
-		pauseForEffect();
-		zoomOutToShowBoth();
-		startTracking();
-		
+		readyForNextDirection();
+	}
+	
+	@Override
+	public void readyForNextDirection() {
+		if (_starting)
+		{
+			aimAtHome();
+		}
+		if (!_pausing)
+		{
+			pauseForEffect();
+		}
+		if (!_zoomingOut)
+		{
+			zoomOutToShowBoth();
+		}
+		if (!_tracking)
+		{
+			startTracking();
+		}
 	}
 	
 	private void aimAtHome() {
-	
 		CameraUpdate toTargetPosition = CameraUpdateFactory.newCameraPosition(_homeCameraPosition);
-	    _map.moveCamera(toTargetPosition);
+		transmitUpdate(toTargetPosition);
 	}
 
 	private void pauseForEffect() {
@@ -82,4 +100,24 @@ public class MapTrackingCameraDirector extends CameraDirector {
 		 return moveToCurrentLocation;
 	}
 	
+	private void moveMapToBoundedTargetPoint(CameraUpdate targetPoint) {
+		_map.animateCamera(targetPoint,new GoogleMap.CancelableCallback() {
+			
+			@Override
+			public void onFinish() {
+				_isZoomedOnCurrentLocation = true;
+				_isZoomingOnCurrentLocation = false;
+				animateMapToTargetPoint(_currentLocation);
+			}
+			
+			@Override
+			public void onCancel() {}
+		});
+	}
+
+	@Override
+	public void stopDirecting() {
+		// TODO Auto-generated method stub
+		
+	}
 }

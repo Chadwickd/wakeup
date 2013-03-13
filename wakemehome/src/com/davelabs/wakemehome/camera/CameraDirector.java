@@ -9,14 +9,21 @@ public abstract class CameraDirector {
 	}
 
 	private final CameraUpdateListener _listener;
+	protected boolean _readyForNextDirection = true;
 	
 	public CameraDirector(CameraUpdateListener listener) {
 		_listener = listener;
 	}
 	
 	protected void transmitUpdate(CameraUpdate update) {
+		_readyForNextDirection = false;
 		_listener.onCameraUpdate(update);
 	}
 	
+	public void lastUpdateComplete() {
+		_readyForNextDirection = true;
+	}
+	
 	public abstract void startDirecting();
+	public abstract void stopDirecting(); 
 }

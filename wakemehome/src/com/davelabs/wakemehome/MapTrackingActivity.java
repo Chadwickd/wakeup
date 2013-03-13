@@ -21,9 +21,6 @@ public class MapTrackingActivity extends Activity {
 	
 	private GoogleMap _map;
 	private Marker _pinPointMarker;
-	private boolean _isZoomedOnCurrentLocation;
-	private boolean _isZoomingOnCurrentLocation;
-	private LatLng _currentLocation;
 	private MapTrackingCameraDirector _director;
 
 	
@@ -31,9 +28,6 @@ public class MapTrackingActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_tracking);
-        
-        _isZoomedOnCurrentLocation = false;
-        _isZoomingOnCurrentLocation = false;
         
         MapFragment f = (MapFragment) this.getFragmentManager().findFragmentById(R.id.trackMap);
         _map = f.getMap();
@@ -47,14 +41,24 @@ public class MapTrackingActivity extends Activity {
 			@Override
 			public void onCameraUpdate(CameraUpdate update) {
 				//might need to update this to callback to the camera director when we are ready to move again
-				_map.animateCamera(update);
+				_map.animateCamera(update, new GoogleMap.CancelableCallback() {
+					
+					@Override
+					public void onFinish() {
+						_director.lastUpdateComplete();
+					}
+					
+					@Override
+					public void onCancel() {
+						_director.stopDirecting();
+					}
+				});
 			}
 		};
 		
         _director = new MapTrackingCameraDirector(cameraListener, _map, targetCameraPosition);
-        
-        
         _director.startDirecting();
+        
         trackCurrentLocation();
     }
 
@@ -63,38 +67,14 @@ public class MapTrackingActivity extends Activity {
 	private void trackCurrentLocation() {
 		CurrentPositionTracker tracker = new CurrentPositionTracker(this,
 			new CurrentPositionTracker.CurrentPositionListener() {
-
 				@Override
 				public void onCurrentPositionChanged(LatLng newPosition) {
-					//MapTrackingActivity.this.onCurrentPositionChanged(newPosition);
 					_director.aimForNewTarget(newPosition);
 				}
-				
 			}
 		);
 		
 		tracker.track();
-	}
-
-
-	private void moveMapToBoundedTargetPoint(CameraUpdate targetPoint) {
-		_map.animateCamera(targetPoint,new GoogleMap.CancelableCallback() {
-			
-			@Override
-			public void onFinish() {
-				_isZoomedOnCurrentLocation = true;
-				_isZoomingOnCurrentLocation = false;
-				animateMapToTargetPoint(_currentLocation);
-			}
-			
-			@Override
-			public void onCancel() {}
-		});
-	}
-	
-	private void animateMapToTargetPoint() {
-		_cameraDirector.animateMapToTargetPoint
-		_map.animateCamera(moveToCurrentLocation);
 	}
 
 	private CameraPosition extractTargetCameraPosition() {
