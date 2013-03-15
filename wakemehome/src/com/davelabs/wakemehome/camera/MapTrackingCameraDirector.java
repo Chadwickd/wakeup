@@ -53,19 +53,16 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	
 	@Override
 	protected void getNextDirection() {
-		if (shouldStart())
-		{
+		if (shouldStart()) {
 			aimAtHome();
 			startCompleted();
 		}
-		if (shouldZoom())
-		{
+		if (shouldZoom()) {
 			pauseForEffect();
 			zoomOutToShowBoth();
 			zoomCompleted();
 		}
-		if (shouldTrack())
-		{
+		if (shouldTrack()) {
 			track();
 		}
 	}
