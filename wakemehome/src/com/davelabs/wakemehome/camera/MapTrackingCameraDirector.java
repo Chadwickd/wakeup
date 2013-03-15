@@ -19,6 +19,8 @@ public class MapTrackingCameraDirector extends CameraDirector {
 
 	private GoogleMap _map;
 	private boolean _isTracking;
+	private boolean _readyToZoomOut;
+	private boolean _readyToTrack;
 	
 	final private static int BOUNDS_PADDING = 100;
 	
@@ -43,29 +45,50 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	}
 
 	@Override
-	public void startDirecting() {
+	protected void initialize() {
 		_startTime = System.currentTimeMillis();
-		readyForNextDirection();
+		_readyToZoomOut = false;
+		_readyToTrack = false;
 	}
 	
 	@Override
-	public void readyForNextDirection() {
-		if (_starting)
+	protected void getNextDirection() {
+		if (shouldStart())
 		{
 			aimAtHome();
+			startCompleted();
 		}
-		if (!_pausing)
+		if (shouldZoom())
 		{
 			pauseForEffect();
-		}
-		if (!_zoomingOut)
-		{
 			zoomOutToShowBoth();
+			zoomCompleted();
 		}
-		if (!_tracking)
+		if (shouldTrack())
 		{
-			startTracking();
+			track();
 		}
+	}
+
+	private void zoomCompleted() {
+		_readyToZoomOut = false;
+		_readyToTrack = true;
+	}
+
+	private void startCompleted() {
+		_readyToZoomOut = true;
+	}
+
+	private boolean shouldTrack() {
+		return _readyToTrack;
+	}
+
+	private boolean shouldZoom() {
+		return _readyToZoomOut;
+	}
+
+	private boolean shouldStart() {
+		return !shouldZoom() && !shouldTrack();
 	}
 	
 	private void aimAtHome() {
@@ -84,7 +107,7 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	     moveMapToBoundedTargetPoint(moveToBoundedCurrentLocation);
 	}
 
-	private void startTracking() {
+	private void track() {
 		// TODO Auto-generated method stub		
 	}
 
@@ -107,17 +130,11 @@ public class MapTrackingCameraDirector extends CameraDirector {
 			public void onFinish() {
 				_isZoomedOnCurrentLocation = true;
 				_isZoomingOnCurrentLocation = false;
-				animateMapToTargetPoint(_currentLocation);
+				animateMapToTargetPoint(_currentTarget);
 			}
 			
 			@Override
 			public void onCancel() {}
 		});
-	}
-
-	@Override
-	public void stopDirecting() {
-		// TODO Auto-generated method stub
-		
 	}
 }

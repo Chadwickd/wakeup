@@ -6,14 +6,12 @@ import android.os.Bundle;
 import com.davelabs.wakemehome.camera.CameraDirector;
 import com.davelabs.wakemehome.camera.MapTrackingCameraDirector;
 import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -39,13 +37,13 @@ public class MapTrackingActivity extends Activity {
         
         CameraDirector.CameraUpdateListener cameraListener = new CameraDirector.CameraUpdateListener() {
 			@Override
-			public void onCameraUpdate(CameraUpdate update) {
+			public void onCameraUpdate(CameraUpdate update, final CameraDirector.UpdateCompleteListener listener) {
 				//might need to update this to callback to the camera director when we are ready to move again
 				_map.animateCamera(update, new GoogleMap.CancelableCallback() {
 					
 					@Override
 					public void onFinish() {
-						_director.lastUpdateComplete();
+						listener.onUpdateComplete();
 					}
 					
 					@Override

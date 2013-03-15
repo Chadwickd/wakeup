@@ -5,25 +5,37 @@ import com.google.android.gms.maps.CameraUpdate;
 public abstract class CameraDirector {
 	
 	public interface CameraUpdateListener {
-		public void onCameraUpdate(CameraUpdate update);
+		public void onCameraUpdate(CameraUpdate update, UpdateCompleteListener listener);
+	}
+	
+	public interface UpdateCompleteListener {
+		public void onUpdateComplete();
 	}
 
 	private final CameraUpdateListener _listener;
-	protected boolean _readyForNextDirection = true;
 	
 	public CameraDirector(CameraUpdateListener listener) {
 		_listener = listener;
 	}
 	
 	protected void transmitUpdate(CameraUpdate update) {
-		_readyForNextDirection = false;
-		_listener.onCameraUpdate(update);
+		_listener.onCameraUpdate(update, new UpdateCompleteListener() {
+			@Override
+			public void onUpdateComplete() {
+				getNextDirection();
+			}
+		});
 	}
 	
-	public void lastUpdateComplete() {
-		_readyForNextDirection = true;
+	public void startDirecting() {
+		initialize();
+		getNextDirection();
 	}
 	
-	public abstract void startDirecting();
-	public abstract void stopDirecting(); 
+	public void stopDirecting() {
+		
+	}
+	
+	protected abstract void initialize();
+	protected abstract void getNextDirection();
 }
