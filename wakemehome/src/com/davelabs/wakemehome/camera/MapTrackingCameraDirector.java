@@ -34,14 +34,7 @@ public class MapTrackingCameraDirector extends CameraDirector {
 
 	public void aimForNewTarget(LatLng newPosition) {
 		_currentTarget = newPosition;		
-//		if (!_isZoomingOnCurrentLocation){
-//			if (!_isZoomedOnCurrentLocation) {
-//				 _isZoomingOnCurrentLocation = true;
-//				
-//			} else { 
-//			     animateMapToTargetPoint(currentLocation);
-//			}
-//		}
+		getNextDirection();
 	}
 
 	@Override
@@ -53,20 +46,14 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	
 	@Override
 	protected void getNextDirection() {
-		if (shouldStart())
-		{
-			aimAtHome();
-			startCompleted();
-		}
-		if (shouldZoom())
-		{
-			pauseForEffect();
+		if (shouldTrack())	{
+			track();
+		} else if (shouldZoom()) {
 			zoomOutToShowBoth();
 			zoomCompleted();
-		}
-		if (shouldTrack())
-		{
-			track();
+		} else {
+			aimAtHome();
+			startCompleted();
 		}
 	}
 
@@ -84,11 +71,7 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	}
 
 	private boolean shouldZoom() {
-		return _readyToZoomOut;
-	}
-
-	private boolean shouldStart() {
-		return !shouldZoom() && !shouldTrack();
+		return (!_waiting && _currentTarget != null);
 	}
 	
 	private void aimAtHome() {
@@ -97,8 +80,7 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	}
 
 	private void pauseForEffect() {
-		// TODO Auto-generated method stub
-		
+		while (System.currentTimeMillis() < _startTime +10000 );
 	}
 
 	private void zoomOutToShowBoth() {
