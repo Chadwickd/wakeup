@@ -11,9 +11,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 
 public class MapTrackingCameraDirector extends CameraDirector {
 
-	private static final int WAIT_SECONDS = 10;
+	private static final int WAIT_SECONDS = 4;
 	
-	private long _startTime;
 	private LatLng _currentTarget;
 	private LatLng _homeLocation;
 	private CameraPosition _homeCameraPosition;
@@ -23,6 +22,8 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	private boolean _hasAimedAtHome;
 	private boolean _waitComplete;
 	private boolean _zooming;
+
+	private boolean _hasZoomed;
 	
 	final private static int BOUNDS_PADDING = 100;
 	
@@ -36,19 +37,27 @@ public class MapTrackingCameraDirector extends CameraDirector {
 
 	public void aimForNewTarget(LatLng newPosition) {
 		_currentTarget = newPosition;		
-		getNextDirection();
+		getNextCameraDirection();
 	}
 
 	@Override
 	protected void initialize() {
-		_startTime = System.currentTimeMillis();
 		_hasAimedAtHome = false;
 		_waitComplete = false;
 		_zooming = false;
+		_hasZoomed = false;
 	}
 	
 	@Override
 	protected void getNextDirection() {
+		if (_zooming) {
+			_zooming = false;
+			_hasZoomed = true;
+		}
+		getNextCameraDirection();
+	}
+
+	private void getNextCameraDirection() {
 		if (shouldTrack())	{
 			track();
 		} else {
@@ -59,7 +68,6 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	private void getPreTrackAnimationDirection() {
 		if (shouldZoom()) {
 			zoomOutToShowBoth();
-			zoomCompleted();
 		} else if (shouldAimAtHome()){
 			aimAtHome();
 			startWait();
@@ -87,12 +95,9 @@ public class MapTrackingCameraDirector extends CameraDirector {
 		getNextDirection();
 	}
 	
-	private void zoomCompleted() {
-		_zooming = false;
-	}
 
 	private boolean shouldTrack() {
-		return (_waitComplete && !_zooming);
+		return (_waitComplete && _hasZoomed && !_zooming);
 	}
 
 	private boolean shouldZoom() {
@@ -105,18 +110,16 @@ public class MapTrackingCameraDirector extends CameraDirector {
 		_hasAimedAtHome = true;
 	}
 
-	private void pauseForEffect() {
-		while (System.currentTimeMillis() < _startTime +10000 );
-	}
-
 	private void zoomOutToShowBoth() {
 		 LatLngBounds cameraBounds = getCameraBounds();
 	     CameraUpdate moveToBoundedCurrentLocation = CameraUpdateFactory.newLatLngBounds(cameraBounds, BOUNDS_PADDING);
-	     moveMapToBoundedTargetPoint(moveToBoundedCurrentLocation);
+	     transmitUpdate(moveToBoundedCurrentLocation);
+	     _zooming = true;
 	}
 
-	private void track() {
-		// TODO Auto-generated method stub		
+	private void track() {		
+		CameraUpdate moveToCurrentLocation = CameraUpdateFactory.newLatLngZoom(_currentTarget,_map.getMaxZoomLevel() - 3);
+		transmitUpdate(moveToCurrentLocation );
 	}
 
 	private LatLngBounds getCameraBounds() {
@@ -126,23 +129,4 @@ public class MapTrackingCameraDirector extends CameraDirector {
 		return builder.build();	
 	}
 	
-	private CameraUpdate animateMapToTargetPoint(LatLng targetPoint) {
-		 CameraUpdate moveToCurrentLocation = CameraUpdateFactory.newLatLngZoom(targetPoint,_map.getMaxZoomLevel() - 3);
-		 return moveToCurrentLocation;
-	}
-	
-	private void moveMapToBoundedTargetPoint(CameraUpdate targetPoint) {
-		_map.animateCamera(targetPoint,new GoogleMap.CancelableCallback() {
-			
-			@Override
-			public void onFinish() {
-//				_isZoomedOnCurrentLocation = true;
-//				_isZoomingOnCurrentLocation = false;
-				animateMapToTargetPoint(_currentTarget);
-			}
-			
-			@Override
-			public void onCancel() {}
-		});
-	}
 }
