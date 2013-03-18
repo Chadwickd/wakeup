@@ -1,5 +1,7 @@
 package com.davelabs.wakemehome.camera;
 
+import android.os.Handler;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -9,18 +11,18 @@ import com.google.android.gms.maps.model.LatLngBounds;
 
 public class MapTrackingCameraDirector extends CameraDirector {
 
+	private static final int WAIT_SECONDS = 10;
+	
 	private long _startTime;
 	private LatLng _currentTarget;
 	private LatLng _homeLocation;
 	private CameraPosition _homeCameraPosition;
-	
-	private boolean _isZoomedOnCurrentLocation;
-	private boolean _isZoomingOnCurrentLocation;
 
 	private GoogleMap _map;
-	private boolean _isTracking;
-	private boolean _readyToZoomOut;
-	private boolean _readyToTrack;
+
+	private boolean _hasAimedAtHome;
+	private boolean _waitComplete;
+	private boolean _zooming;
 	
 	final private static int BOUNDS_PADDING = 100;
 	
@@ -40,43 +42,67 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	@Override
 	protected void initialize() {
 		_startTime = System.currentTimeMillis();
-		_readyToZoomOut = false;
-		_readyToTrack = false;
+		_hasAimedAtHome = false;
+		_waitComplete = false;
+		_zooming = false;
 	}
 	
 	@Override
 	protected void getNextDirection() {
 		if (shouldTrack())	{
 			track();
-		} else if (shouldZoom()) {
-			zoomOutToShowBoth();
-			zoomCompleted();
 		} else {
-			aimAtHome();
-			startCompleted();
+			getPreTrackAnimationDirection();
 		}
 	}
 
-	private void zoomCompleted() {
-		_readyToZoomOut = false;
-		_readyToTrack = true;
+	private void getPreTrackAnimationDirection() {
+		if (shouldZoom()) {
+			zoomOutToShowBoth();
+			zoomCompleted();
+		} else if (shouldAimAtHome()){
+			aimAtHome();
+			startWait();
+		}
 	}
 
-	private void startCompleted() {
-		_readyToZoomOut = true;
+	private boolean shouldAimAtHome() {
+		return (!_hasAimedAtHome);
+	}
+
+	private void startWait() {
+		Handler h = new Handler();
+		h.postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				waitCompleted();
+			}
+			
+		}, WAIT_SECONDS * 1000);
+	}
+
+	private void waitCompleted() {
+		_waitComplete = true;
+		getNextDirection();
+	}
+	
+	private void zoomCompleted() {
+		_zooming = false;
 	}
 
 	private boolean shouldTrack() {
-		return _readyToTrack;
+		return (_waitComplete && !_zooming);
 	}
 
 	private boolean shouldZoom() {
-		return (!_waiting && _currentTarget != null);
+		return (_waitComplete && _currentTarget != null);
 	}
 	
 	private void aimAtHome() {
 		CameraUpdate toTargetPosition = CameraUpdateFactory.newCameraPosition(_homeCameraPosition);
 		transmitUpdate(toTargetPosition);
+		_hasAimedAtHome = true;
 	}
 
 	private void pauseForEffect() {
@@ -110,8 +136,8 @@ public class MapTrackingCameraDirector extends CameraDirector {
 			
 			@Override
 			public void onFinish() {
-				_isZoomedOnCurrentLocation = true;
-				_isZoomingOnCurrentLocation = false;
+//				_isZoomedOnCurrentLocation = true;
+//				_isZoomingOnCurrentLocation = false;
 				animateMapToTargetPoint(_currentTarget);
 			}
 			
