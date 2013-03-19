@@ -98,4 +98,9 @@ public class MainActivity extends Activity {
 		
 		startActivity(i);
 	}
+	
+	public void onSettingsButtonClicked(View v) {
+		Intent i = new Intent(this, SettingsActivity.class);
+		startActivity(i);
+	}
 }
