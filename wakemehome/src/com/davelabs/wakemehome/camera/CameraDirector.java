@@ -22,6 +22,7 @@ public abstract class CameraDirector {
 		_listener.onCameraUpdate(update, new UpdateCompleteListener() {
 			@Override
 			public void onUpdateComplete() {
+				updateStateAfterUpdateCompletion();
 				getNextDirection();
 			}
 		});
@@ -37,5 +38,6 @@ public abstract class CameraDirector {
 	}
 	
 	protected abstract void initialize();
+	protected abstract void updateStateAfterUpdateCompletion();
 	protected abstract void getNextDirection();
 }

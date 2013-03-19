@@ -2,9 +2,9 @@ package com.davelabs.wakemehome.camera;
 
 import android.os.Handler;
 
+import com.davelabs.wakemehome.R;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -17,8 +17,6 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	private LatLng _homeLocation;
 	private CameraPosition _homeCameraPosition;
 
-	private GoogleMap _map;
-
 	private boolean _hasAimedAtHome;
 	private boolean _waitComplete;
 	private boolean _zooming;
@@ -28,16 +26,15 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	final private static int BOUNDS_PADDING = 100;
 	
 
-	public MapTrackingCameraDirector(CameraUpdateListener listener, GoogleMap map, CameraPosition homeCameraPosition) {
+	public MapTrackingCameraDirector(CameraUpdateListener listener, CameraPosition homeCameraPosition) {
 		super(listener);
-		_map = map;
 		_homeCameraPosition = homeCameraPosition;
 		_homeLocation = homeCameraPosition.target;
 	}
 
 	public void aimForNewTarget(LatLng newPosition) {
 		_currentTarget = newPosition;		
-		getNextCameraDirection();
+		getNextDirection();
 	}
 
 	@Override
@@ -48,20 +45,21 @@ public class MapTrackingCameraDirector extends CameraDirector {
 		_hasZoomed = false;
 	}
 	
+	
 	@Override
 	protected void getNextDirection() {
-		if (_zooming) {
-			_zooming = false;
-			_hasZoomed = true;
-		}
-		getNextCameraDirection();
-	}
-
-	private void getNextCameraDirection() {
 		if (shouldTrack())	{
 			track();
 		} else {
 			getPreTrackAnimationDirection();
+		}
+	}
+	
+	@Override
+	protected void updateStateAfterUpdateCompletion() {
+		if (_zooming) {
+			_zooming = false;
+			_hasZoomed = true;
 		}
 	}
 
@@ -118,7 +116,7 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	}
 
 	private void track() {		
-		CameraUpdate moveToCurrentLocation = CameraUpdateFactory.newLatLngZoom(_currentTarget,_map.getMaxZoomLevel() - 3);
+		CameraUpdate moveToCurrentLocation = CameraUpdateFactory.newLatLngZoom(_currentTarget, R.integer.zoomLevel);
 		transmitUpdate(moveToCurrentLocation );
 	}
 

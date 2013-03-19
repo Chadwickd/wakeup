@@ -90,6 +90,7 @@ public class MainActivity extends Activity {
 		SearchedLocation home = _store.getHomeLocation();
 		CameraPosition.Builder builder = CameraPosition.builder();
 		builder.target(home.getTarget());
+		builder.zoom(R.integer.zoomLevel);
 		CameraPosition position = builder.build();
 		
 		Intent i = new Intent(this, MapTrackingActivity.class);

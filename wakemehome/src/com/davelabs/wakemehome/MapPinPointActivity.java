@@ -112,7 +112,7 @@ public class MapPinPointActivity extends Activity {
 	}
 
 	private void moveMapToTargetPoint(LatLng targetPoint) {
-		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPoint,_map.getMaxZoomLevel() -5);
+		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPoint, R.integer.zoomLevel);
 		_map.animateCamera(cameraUpdate);
 	}
 

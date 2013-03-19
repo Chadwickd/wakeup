@@ -54,7 +54,7 @@ public class MapTrackingActivity extends Activity {
 			}
 		};
 		
-        _director = new MapTrackingCameraDirector(cameraListener, _map, targetCameraPosition);
+        _director = new MapTrackingCameraDirector(cameraListener, targetCameraPosition);
         _director.startDirecting();
         
         trackCurrentLocation();
