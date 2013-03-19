@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +31,7 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.activity_main, menu);
+        
         return true;
     }
     
@@ -99,8 +101,9 @@ public class MainActivity extends Activity {
 		startActivity(i);
 	}
 	
-	public void onSettingsButtonClicked(View v) {
+	public boolean onSettingsButtonClicked(MenuItem item) {
 		Intent i = new Intent(this, SettingsActivity.class);
 		startActivity(i);
+		return true;
 	}
 }
