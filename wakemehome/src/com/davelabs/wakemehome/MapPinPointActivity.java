@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -35,6 +36,8 @@ public class MapPinPointActivity extends Activity {
 
 	private String _searchQuery;
 	
+	private int _defaultZoomLevel;
+	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +51,9 @@ public class MapPinPointActivity extends Activity {
 	private void setInstanceVariables() {        
         MapFragment f = (MapFragment) this.getFragmentManager().findFragmentById(R.id.searchMap);
         _map = f.getMap();
+        
+        Resources r = this.getResources();
+		_defaultZoomLevel = r.getInteger(R.integer.zoomLevel);
 	}
 	
 	private void tryToLookupSearchQuery(String searchQuery) {
@@ -112,7 +118,8 @@ public class MapPinPointActivity extends Activity {
 	}
 
 	private void moveMapToTargetPoint(LatLng targetPoint) {
-		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPoint, R.integer.zoomLevel);
+		
+		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(targetPoint, _defaultZoomLevel);
 		_map.animateCamera(cameraUpdate);
 	}
 

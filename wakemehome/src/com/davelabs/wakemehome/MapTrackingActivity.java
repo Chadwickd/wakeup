@@ -1,6 +1,7 @@
 package com.davelabs.wakemehome;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import com.davelabs.wakemehome.camera.CameraDirector;
@@ -20,6 +21,7 @@ public class MapTrackingActivity extends Activity {
 	private GoogleMap _map;
 	private Marker _pinPointMarker;
 	private MapTrackingCameraDirector _director;
+	private int _defaultZoomLevel;
 
 	
     @Override
@@ -27,6 +29,9 @@ public class MapTrackingActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_tracking);
         
+        Resources r = this.getResources();
+		_defaultZoomLevel = r.getInteger(R.integer.zoomLevel);
+		
         MapFragment f = (MapFragment) this.getFragmentManager().findFragmentById(R.id.trackMap);
         _map = f.getMap();
         _map.setMyLocationEnabled(true);
@@ -54,7 +59,7 @@ public class MapTrackingActivity extends Activity {
 			}
 		};
 		
-        _director = new MapTrackingCameraDirector(cameraListener, targetCameraPosition);
+        _director = new MapTrackingCameraDirector(cameraListener, targetCameraPosition, _defaultZoomLevel);
         _director.startDirecting();
         
         trackCurrentLocation();
@@ -95,7 +100,7 @@ public class MapTrackingActivity extends Activity {
 		      .draggable(false)
 		    );
 		}
+	
 		return _pinPointMarker;
 	}
-	
 }

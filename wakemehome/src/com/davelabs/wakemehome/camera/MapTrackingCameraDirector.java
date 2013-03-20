@@ -13,6 +13,8 @@ public class MapTrackingCameraDirector extends CameraDirector {
 
 	private static final int WAIT_SECONDS = 4;
 	
+	private int _defaultZoomLevel;
+	
 	private LatLng _currentTarget;
 	private LatLng _homeLocation;
 	private CameraPosition _homeCameraPosition;
@@ -26,10 +28,11 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	final private static int BOUNDS_PADDING = 100;
 	
 
-	public MapTrackingCameraDirector(CameraUpdateListener listener, CameraPosition homeCameraPosition) {
+	public MapTrackingCameraDirector(CameraUpdateListener listener, CameraPosition homeCameraPosition, int defaultZoomLevel) {
 		super(listener);
 		_homeCameraPosition = homeCameraPosition;
 		_homeLocation = homeCameraPosition.target;
+		_defaultZoomLevel = defaultZoomLevel;
 	}
 
 	public void aimForNewTarget(LatLng newPosition) {
@@ -116,8 +119,8 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	}
 
 	private void track() {		
-		CameraUpdate moveToCurrentLocation = CameraUpdateFactory.newLatLngZoom(_currentTarget, R.integer.zoomLevel);
-		transmitUpdate(moveToCurrentLocation );
+		CameraUpdate moveToCurrentLocation = CameraUpdateFactory.newLatLngZoom(_currentTarget, _defaultZoomLevel);
+		transmitUpdate(moveToCurrentLocation);
 	}
 
 	private LatLngBounds getCameraBounds() {
