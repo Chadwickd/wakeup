@@ -64,7 +64,8 @@ public class CurrentPositionTracker implements LocationListener {
 		for (String provider : providers) {
 			Location lastKnownLocation = _lm.getLastKnownLocation(provider);
 			if (lastKnownLocation != null) {
-				if (lastKnownLocation.getTime() < 60000) {
+				long currentTime = System.currentTimeMillis();
+				if ((currentTime - lastKnownLocation.getTime()) < 60000) {
 					if (bestLocation == null || lastKnownLocation.getAccuracy() < bestLocation.getAccuracy()) {
 						bestLocation = lastKnownLocation;
 					}
