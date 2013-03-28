@@ -21,7 +21,7 @@ public class PreferencesFileSearchedLocationStore implements SearchedLocationSto
 
 	public PreferencesFileSearchedLocationStore(Context context)
 	{
-		_preferences = context.getSharedPreferences("preferences", context.MODE_PRIVATE);
+		_preferences = context.getSharedPreferences("preferences", Context.MODE_PRIVATE);
 	}
 	
 	@Override

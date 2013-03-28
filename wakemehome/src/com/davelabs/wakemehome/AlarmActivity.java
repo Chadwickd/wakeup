@@ -26,13 +26,11 @@ public class AlarmActivity extends Activity{
 		Uri tone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 		_r = RingtoneManager.getRingtone(getApplicationContext(),tone);
 		_r.play();
-		
 	}
 
 	private void vibrateAlarm() {
 		_vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
         _vibrator.vibrate(10000000);
-		
 	}
 	
 	public void imAwakeButtonClicked(View v) {
