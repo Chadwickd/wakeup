@@ -1,7 +1,11 @@
 package com.davelabs.wakemehome;
 
 import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import com.davelabs.wakemehome.camera.CameraDirector;
@@ -22,6 +26,8 @@ public class MapTrackingActivity extends Activity {
 	private Marker _pinPointMarker;
 	private MapTrackingCameraDirector _director;
 	private int _defaultZoomLevel;
+	private LatLng _targetCameraLocation;
+
 
 	
     @Override
@@ -38,7 +44,8 @@ public class MapTrackingActivity extends Activity {
         _map.getUiSettings().setMyLocationButtonEnabled(true);
         
         CameraPosition targetCameraPosition = extractTargetCameraPosition();
-        showPinPointMarker(targetCameraPosition.target);
+        _targetCameraLocation = targetCameraPosition.target;
+        showPinPointMarker();
         
         CameraDirector.CameraUpdateListener cameraListener = new CameraDirector.CameraUpdateListener() {
 			@Override
@@ -63,12 +70,13 @@ public class MapTrackingActivity extends Activity {
         _director.startDirecting();
         
         trackCurrentLocation();
+        addProximityAlert();
     }
 
 	
 
 	private void trackCurrentLocation() {
-		CurrentPositionTracker tracker = new CurrentPositionTracker(this,
+		CurrentPositionTracker tracker = new CurrentPositionTracker(
 			new CurrentPositionTracker.CurrentPositionListener() {
 				@Override
 				public void onCurrentPositionChanged(LatLng newPosition) {
@@ -77,7 +85,7 @@ public class MapTrackingActivity extends Activity {
 			}
 		);
 		
-		tracker.track();
+        _map.setOnMyLocationChangeListener(tracker);
 	}
 
 	private CameraPosition extractTargetCameraPosition() {
@@ -86,8 +94,8 @@ public class MapTrackingActivity extends Activity {
 		return targetPosition;
 	}
 
-	private void showPinPointMarker(LatLng targetLocation) {
-		Marker m = createPinPointMarker(targetLocation);
+	private void showPinPointMarker() {
+		Marker m = createPinPointMarker(_targetCameraLocation);
 		m.setVisible(true);
 	}
 	
@@ -102,5 +110,15 @@ public class MapTrackingActivity extends Activity {
 		}
 	
 		return _pinPointMarker;
+	}
+
+
+
+	private void addProximityAlert() {
+		LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+		 Intent intent = new Intent("com.davelabs.wakemehome.RING_ALARM");
+         PendingIntent proximityIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
+		lm.addProximityAlert(_targetCameraLocation.latitude,_targetCameraLocation.longitude, 200, -1, proximityIntent);
+		
 	}
 }

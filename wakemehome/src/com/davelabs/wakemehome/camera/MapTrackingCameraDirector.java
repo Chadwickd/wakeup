@@ -2,7 +2,6 @@ package com.davelabs.wakemehome.camera;
 
 import android.os.Handler;
 
-import com.davelabs.wakemehome.R;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -11,7 +10,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 
 public class MapTrackingCameraDirector extends CameraDirector {
 
-	private static final int WAIT_SECONDS = 4;
+	private static final int WAIT_SECONDS = 6;
 	
 	private int _defaultZoomLevel;
 	

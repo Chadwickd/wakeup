@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Menu;
@@ -92,7 +93,9 @@ public class MainActivity extends Activity {
 		SearchedLocation home = _store.getHomeLocation();
 		CameraPosition.Builder builder = CameraPosition.builder();
 		builder.target(home.getTarget());
-		builder.zoom(R.integer.zoomLevel);
+		Resources r = this.getResources();
+		int defaultZoom = r.getInteger(R.integer.zoomLevel);
+		builder.zoom(defaultZoom);
 		CameraPosition position = builder.build();
 		
 		Intent i = new Intent(this, MapTrackingActivity.class);
