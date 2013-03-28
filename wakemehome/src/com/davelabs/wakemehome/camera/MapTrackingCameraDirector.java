@@ -62,6 +62,7 @@ public class MapTrackingCameraDirector extends CameraDirector {
 		if (_zooming) {
 			_zooming = false;
 			_hasZoomed = true;
+			
 		}
 	}
 
