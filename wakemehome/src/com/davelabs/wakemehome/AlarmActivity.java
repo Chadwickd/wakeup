@@ -1,7 +1,10 @@
 package com.davelabs.wakemehome;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.location.LocationManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -36,5 +39,20 @@ public class AlarmActivity extends Activity{
 	public void imAwakeButtonClicked(View v) {
 		_vibrator.cancel();
 		_r.stop();
+		removeProximityAlert();
+	}
+
+	private void removeProximityAlert() {
+		LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+		Intent intent = new Intent("com.davelabs.wakemehome.RING_ALARM");
+        PendingIntent proximityIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
+		lm.removeProximityAlert(proximityIntent);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    	this.startActivity(intent);		
 	}
 }

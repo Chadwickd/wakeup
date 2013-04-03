@@ -116,7 +116,7 @@ public class MapTrackingActivity extends Activity {
 	private void addProximityAlert() {
 		LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		Intent intent = new Intent("com.davelabs.wakemehome.RING_ALARM");
-        PendingIntent proximityIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+        PendingIntent proximityIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
 		lm.addProximityAlert(_targetCameraLocation.latitude,_targetCameraLocation.longitude, 200, -1, proximityIntent);
 	}
 }
