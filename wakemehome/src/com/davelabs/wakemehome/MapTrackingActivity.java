@@ -1,15 +1,20 @@
 package com.davelabs.wakemehome;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.location.LocationManager;
 import android.os.Bundle;
 
 import com.davelabs.wakemehome.camera.CameraDirector;
 import com.davelabs.wakemehome.camera.MapTrackingCameraDirector;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -27,6 +32,7 @@ public class MapTrackingActivity extends Activity {
 	private MapTrackingCameraDirector _director;
 	private int _defaultZoomLevel;
 	private LatLng _targetCameraLocation;
+	private LocationClient _lc;
 
 
 	
@@ -114,9 +120,48 @@ public class MapTrackingActivity extends Activity {
 
 
 	private void addProximityAlert() {
-		LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-		Intent intent = new Intent("com.davelabs.wakemehome.RING_ALARM");
-        PendingIntent proximityIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
-		lm.addProximityAlert(_targetCameraLocation.latitude,_targetCameraLocation.longitude, 200, -1, proximityIntent);
+		Geofence.Builder b = new Geofence.Builder();
+		Geofence fence = b.setCircularRegion(_targetCameraLocation.latitude,_targetCameraLocation.longitude, 2000)
+		.setExpirationDuration(Geofence.NEVER_EXPIRE)
+		.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
+		.setRequestId("Dave")
+		.build();
+		final List<Geofence> fenceList = new ArrayList<Geofence>();
+		fenceList.add(fence);
+		Intent intent = new Intent(getApplicationContext(),AlarmActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        final PendingIntent proximityIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		
+		
+		_lc = new LocationClient(this, 
+				new GooglePlayServicesClient.ConnectionCallbacks() {
+
+					@Override
+					public void onConnected(Bundle arg0) {
+						addFence(fenceList, proximityIntent);
+					}					
+					@Override
+					public void onDisconnected() {}
+			
+		},
+				new GooglePlayServicesClient.OnConnectionFailedListener() {
+
+					@Override
+					public void onConnectionFailed(ConnectionResult arg0) {}
+			
+		}
+		);
+		_lc.connect();
+	}
+
+	private void addFence(final List<Geofence> fenceList,
+		final PendingIntent proximityIntent) {
+		_lc.addGeofences(fenceList, proximityIntent, 
+			new LocationClient.OnAddGeofencesResultListener() {
+				@Override
+				public void onAddGeofencesResult(int arg0,
+						String[] arg1) {} 
+			}
+	);
 	}
 }
