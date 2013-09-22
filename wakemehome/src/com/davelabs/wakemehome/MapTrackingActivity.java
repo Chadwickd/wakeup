@@ -27,6 +27,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapTrackingActivity extends Activity {
 	
+	private static final long PROXIMITY_DURATION = 86400000;
+	private static final float ALARM_RADIUS_METERS = 2000;
 	private GoogleMap _map;
 	private Marker _pinPointMarker;
 	private MapTrackingCameraDirector _director;
@@ -121,8 +123,8 @@ public class MapTrackingActivity extends Activity {
 
 	private void addProximityAlert() {
 		Geofence.Builder b = new Geofence.Builder();
-		Geofence fence = b.setCircularRegion(_targetCameraLocation.latitude,_targetCameraLocation.longitude, 2000)
-		.setExpirationDuration(Geofence.NEVER_EXPIRE)
+		Geofence fence = b.setCircularRegion(_targetCameraLocation.latitude,_targetCameraLocation.longitude, ALARM_RADIUS_METERS)
+		.setExpirationDuration(PROXIMITY_DURATION)
 		.setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
 		.setRequestId("Dave")
 		.build();

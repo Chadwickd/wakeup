@@ -4,16 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/main_border"
+    android:baselineAligned="true"
     android:orientation="vertical"
     tools:context=".MainActivity" >
 
     <Button
         android:id="@+id/performTakeHomeButton"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="77dp"
+        android:background="@drawable/takemehomebutton"
         android:enabled="false"
         android:onClick="onTakeHomeButtonClicked"
-        android:text="@string/perform_take_home" />
+        android:text="@string/perform_take_home"
+        android:gravity="bottom|right" />
 
     <LinearLayout
         android:id="@+id/searchContainerLayout"
