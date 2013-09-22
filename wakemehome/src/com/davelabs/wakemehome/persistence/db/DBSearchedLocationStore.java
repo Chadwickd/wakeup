@@ -134,8 +134,8 @@ public class DBSearchedLocationStore implements SearchedLocationStore {
 	private SearchedLocation parseCurrentRow(Cursor c) {
 		long id = c.getLong(c.getColumnIndex(SearchedLocationContract._ID));
 		String searchQuery = c.getString(c.getColumnIndex(SearchedLocationContract.COLUMN_NAME_SEARCH_QUERY));
-		long lat = c.getLong(c.getColumnIndex(SearchedLocationContract.COLUMN_NAME_LAT));
-		long lng = c.getLong(c.getColumnIndex(SearchedLocationContract.COLUMN_NAME_LNG));
+		double lat = c.getDouble(c.getColumnIndex(SearchedLocationContract.COLUMN_NAME_LAT));
+		double lng = c.getDouble(c.getColumnIndex(SearchedLocationContract.COLUMN_NAME_LNG));
 		boolean isHome = c.getInt(c.getColumnIndex(SearchedLocationContract.COLUMN_NAME_IS_HOME)) == 1 ? true : false;
 		boolean isPinned = c.getInt(c.getColumnIndex(SearchedLocationContract.COLUMN_NAME_IS_PINNED)) == 1 ? true : false;
 		

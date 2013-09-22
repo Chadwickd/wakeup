@@ -15,8 +15,8 @@ public class DBSearchedLocationStoreDBHelper extends SQLiteOpenHelper {
     		"CREATE TABLE " + SearchedLocationContract.TABLE_NAME + " (" +
     		SearchedLocationContract._ID + " INTEGER PRIMARY KEY, " +
     		SearchedLocationContract.COLUMN_NAME_SEARCH_QUERY + " TEXT, " +
-    		SearchedLocationContract.COLUMN_NAME_LAT + " INTEGER, " +
-    		SearchedLocationContract.COLUMN_NAME_LNG + " INTEGER, " +
+    		SearchedLocationContract.COLUMN_NAME_LAT + " REAL, " +
+    		SearchedLocationContract.COLUMN_NAME_LNG + " REAL, " +
     		SearchedLocationContract.COLUMN_NAME_IS_HOME + " INTEGER, " +
     		SearchedLocationContract.COLUMN_NAME_IS_PINNED + " INTEGER" +
     		" )";
