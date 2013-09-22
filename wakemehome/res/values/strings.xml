@@ -15,4 +15,5 @@
         <item>Metres</item>
         <item>Feet</item>
     </string-array>
+    <string name="recent_destinations">Recent destinations:</string>
 </resources>

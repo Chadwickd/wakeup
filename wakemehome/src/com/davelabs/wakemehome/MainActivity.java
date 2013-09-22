@@ -5,13 +5,17 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import com.davelabs.wakemehome.helpers.NetworkHelper;
 import com.davelabs.wakemehome.persistence.SearchedLocationStore;
@@ -39,6 +43,7 @@ public class MainActivity extends Activity {
     private void populateGUIWithStoredLocations() {
     	_store = SearchedLocationStoreFactory.getStore(this);
 		populateHomeLocation();
+		populateRecentLocations();
 	}
 
 	private void populateHomeLocation() {
@@ -50,6 +55,11 @@ public class MainActivity extends Activity {
 			takeHomeButton.setText(takeHomeString + ": " + homeLocation.getSearchQuery());
 			takeHomeButton.setEnabled(true);
 		}
+	}
+	
+	private void populateRecentLocations() {
+		ListView listView = (ListView) this.findViewById(R.id.recentSearchList);
+		listView.setAdapter(new RecentSearchListAdapter(this));
 	}
 
 	public void onSearchButtonClicked(View v)

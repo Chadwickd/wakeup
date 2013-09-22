@@ -5,7 +5,14 @@ import java.util.List;
 import com.davelabs.wakemehome.SearchedLocation;
 
 public interface SearchedLocationStore {
-	public List<SearchedLocation> getAllLocations();
-	public SearchedLocation getHomeLocation();
-	public void saveLocation(SearchedLocation location);
+	SearchedLocation getHomeLocation();
+	List<SearchedLocation> getPinnedLocations();
+	List<SearchedLocation> getRecentLocations();
+	
+	void saveLocation(SearchedLocation location);
+	void removeLocation(SearchedLocation location);
+	void pinLocation(SearchedLocation location);
+	void unpinLocation(SearchedLocation location);
+	void setLocationAsHome(SearchedLocation location);
+	void unsetLocationAsHome(SearchedLocation location);
 }

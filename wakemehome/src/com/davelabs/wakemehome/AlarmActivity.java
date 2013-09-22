@@ -48,7 +48,7 @@ public class AlarmActivity extends Activity{
         PendingIntent proximityIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
 		lm.removeProximityAlert(proximityIntent);
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		Intent intent = new Intent(this, MainActivity.class);

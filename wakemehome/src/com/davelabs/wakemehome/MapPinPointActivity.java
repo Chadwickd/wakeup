@@ -134,16 +134,22 @@ public class MapPinPointActivity extends Activity {
     	CameraPosition.Builder b = CameraPosition.builder(_map.getCameraPosition());
     	b.target(_pinPointMarker.getPosition());
     	
-    	storeLocationAsHome(_pinPointMarker);
+    	storeLocation(_pinPointMarker);
     	
     	intent.putExtra("CameraPosition", b.build());
     	this.startActivity(intent);
     }
 	
-	private void storeLocationAsHome(Marker m) {
-		SearchedLocationStore store = SearchedLocationStoreFactory.getStore(this);
+	private void storeLocation(Marker m) {
+		
 		SearchedLocation location = new SearchedLocation(_searchQuery, m.getPosition());
+		SearchedLocationStore store = SearchedLocationStoreFactory.getStore(this);
 		store.saveLocation(location);
+		
+		SearchedLocation homeLocation = store.getHomeLocation();
+		if (homeLocation == null) {
+			store.setLocationAsHome(location);
+		}
 	}
 
 	public Dialog getSearchQueryNotFoundDialog() {
