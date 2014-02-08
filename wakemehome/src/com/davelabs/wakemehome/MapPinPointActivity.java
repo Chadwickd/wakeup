@@ -51,6 +51,7 @@ public class MapPinPointActivity extends Activity {
 	private void setInstanceVariables() {        
         MapFragment f = (MapFragment) this.getFragmentManager().findFragmentById(R.id.searchMap);
         _map = f.getMap();
+        _map.getUiSettings().setZoomControlsEnabled(false);
         
         Resources r = this.getResources();
 		_defaultZoomLevel = r.getInteger(R.integer.zoomLevel);

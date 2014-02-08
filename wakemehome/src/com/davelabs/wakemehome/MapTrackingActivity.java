@@ -50,6 +50,7 @@ public class MapTrackingActivity extends Activity {
         _map = f.getMap();
         _map.setMyLocationEnabled(true);
         _map.getUiSettings().setMyLocationButtonEnabled(true);
+        _map.getUiSettings().setZoomControlsEnabled(false);
         
         CameraPosition targetCameraPosition = extractTargetCameraPosition();
         _targetCameraLocation = targetCameraPosition.target;
