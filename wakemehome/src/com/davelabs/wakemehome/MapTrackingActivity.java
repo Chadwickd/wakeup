@@ -36,8 +36,6 @@ public class MapTrackingActivity extends Activity {
 	private LatLng _targetCameraLocation;
 	private LocationClient _lc;
 
-
-	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,8 +79,6 @@ public class MapTrackingActivity extends Activity {
         addProximityAlert();
     }
 
-	
-
 	private void trackCurrentLocation() {
 		CurrentPositionTracker tracker = new CurrentPositionTracker(
 			new CurrentPositionTracker.CurrentPositionListener() {
@@ -119,8 +115,6 @@ public class MapTrackingActivity extends Activity {
 	
 		return _pinPointMarker;
 	}
-
-
 
 	private void addProximityAlert() {
 		Geofence.Builder b = new Geofence.Builder();
