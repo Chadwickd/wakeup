@@ -6,6 +6,7 @@ import com.davelabs.wakemehome.SearchedLocation;
 
 public interface SearchedLocationStore {
 	SearchedLocation getHomeLocation();
+	void clearHomeLocation();
 	List<SearchedLocation> getPinnedLocations();
 	List<SearchedLocation> getRecentLocations();
 	
@@ -14,5 +15,4 @@ public interface SearchedLocationStore {
 	void pinLocation(SearchedLocation location);
 	void unpinLocation(SearchedLocation location);
 	void setLocationAsHome(SearchedLocation location);
-	void unsetLocationAsHome(SearchedLocation location);
 }

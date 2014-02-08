@@ -114,9 +114,12 @@ public class DBSearchedLocationStore implements SearchedLocationStore {
 	}
 
 	@Override
-	public void unsetLocationAsHome(SearchedLocation location) {
-		location.unsetAsHome();
-		updateLocationRow(location);
+	public void clearHomeLocation() {
+		SearchedLocation location = getHomeLocation();
+		if (location != null) {
+			location.unsetAsHome();
+			updateLocationRow(location);
+		};
 	}
 
 	private List<SearchedLocation> parseRows(Cursor c) {

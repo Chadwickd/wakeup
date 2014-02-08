@@ -5,16 +5,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.davelabs.wakemehome.helpers.NetworkHelper;
@@ -47,11 +44,11 @@ public class MainActivity extends Activity {
     
     private void populateGUIWithStoredLocations() {
     	_store = SearchedLocationStoreFactory.getStore(this);
-		populateHomeLocation();
+		populateHomeButton();
 		populateRecentLocations();
 	}
 
-	private void populateHomeLocation() {
+	private void populateHomeButton() {
 		SearchedLocation homeLocation = _store.getHomeLocation();
 		
 		if (homeLocation != null) {
@@ -60,6 +57,13 @@ public class MainActivity extends Activity {
 			takeHomeButton.setText(takeHomeString + ": " + homeLocation.getSearchQuery());
 			takeHomeButton.setEnabled(true);
 		}
+	}
+	
+	private void clearHomeButton() {
+			Button takeHomeButton = (Button)this.findViewById(R.id.performTakeHomeButton);
+			String takeHomeString = this.getString(R.string.perform_take_home);
+			takeHomeButton.setText(takeHomeString);
+			takeHomeButton.setEnabled(false);
 	}
 	
 	private void populateRecentLocations() {
@@ -79,7 +83,7 @@ public class MainActivity extends Activity {
     private AlertDialog getPopup() {
 		if (_popup == null) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("You don't seem to have internet, we will take you to the settings page to turn it on. Press back to return when you are done");
+			builder.setMessage("You don't seem to have internet enabled, we will take you to the settings page to turn it on. Press back to return when you are done");
 			builder.setPositiveButton("Go", dialogClickListener);
 			_popup = builder.create();
 		}
@@ -119,9 +123,9 @@ public class MainActivity extends Activity {
 		startActivity(i);
 	}
 	
-	public boolean onSettingsButtonClicked(MenuItem item) {
-		Intent i = new Intent(this, SettingsActivity.class);
-		startActivity(i);
+	public boolean onClearHomeClicked(MenuItem item) {
+		_store.clearHomeLocation();
+		clearHomeButton();
 		return true;
 	}
 }

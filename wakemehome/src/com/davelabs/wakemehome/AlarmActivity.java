@@ -17,7 +17,6 @@ import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
 
 public class AlarmActivity extends Activity{
