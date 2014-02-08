@@ -60,7 +60,9 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	@Override
 	protected void getNextDirection() {
 		if (shouldTrack()) {
-			track();
+			if(!_trackingPaused) {
+				track();
+			}
 		} else {
 			getPreTrackAnimationDirection();
 		}
@@ -107,7 +109,7 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	
 
 	private boolean shouldTrack() {
-		return (_waitComplete && _hasZoomed && !_zooming && !_trackingPaused);
+		return (_waitComplete && _hasZoomed && !_zooming);
 	}
 
 	private boolean shouldZoom() {

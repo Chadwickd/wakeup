@@ -163,6 +163,9 @@ public class MapTrackingActivity extends Activity {
 		
 		LocationRequest req = LocationRequest.create();
 		req.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+		//Set this high as myLocation is requesting updates anyway and we should stay in sync
+		req.setInterval(150000);
+		req.setFastestInterval(1000);
 		
 		_lc.requestLocationUpdates(req,  tracker);
 	}
