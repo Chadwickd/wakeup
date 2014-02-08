@@ -34,7 +34,6 @@ public abstract class CameraDirector {
 	}
 	
 	public void stopDirecting() {
-		
 	}
 	
 	protected abstract void initialize();
