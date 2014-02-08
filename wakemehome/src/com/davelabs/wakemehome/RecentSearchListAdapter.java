@@ -1,12 +1,15 @@
 package com.davelabs.wakemehome;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.davelabs.wakemehome.helpers.IntentHelper;
 import com.davelabs.wakemehome.persistence.SearchedLocationStore;
 import com.davelabs.wakemehome.persistence.SearchedLocationStoreFactory;
 
@@ -39,11 +42,21 @@ public class RecentSearchListAdapter implements ListAdapter {
 	}
 
 	@Override
-	public View getView(int i, View old, ViewGroup parent) {
-		TextView v = new TextView(parent.getContext());
-		SearchedLocation l = _store.getRecentLocations().get(i);
-		v.setText(l.getSearchQuery());
+	public View getView(int i, View old, final ViewGroup parent) {
+		final Context context = parent.getContext();
+		final SearchedLocation l = _store.getRecentLocations().get(i);
 		
+		TextView v = new TextView(context);
+		v.setText(l.getSearchQuery());
+		v.setTextAppearance(context, R.style.StandardText);
+		v.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = IntentHelper.TrackingIntentFromLocation(context, l);
+				context.startActivity(intent);
+			}
+		});
 		return v;
 	}
 
