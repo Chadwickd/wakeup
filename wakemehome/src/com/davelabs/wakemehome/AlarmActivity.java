@@ -17,6 +17,7 @@ import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
 
 public class AlarmActivity extends Activity{
@@ -72,7 +73,7 @@ public class AlarmActivity extends Activity{
 			
 		}
 		);
-		
+		_lc.connect();
 		
 	}
 	
@@ -93,7 +94,7 @@ public class AlarmActivity extends Activity{
 	@Override
 	public void onBackPressed() {
 		Intent intent = new Intent(this, MainActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
     	this.startActivity(intent);		
 	}
 }
