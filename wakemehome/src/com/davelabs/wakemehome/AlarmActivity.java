@@ -47,11 +47,29 @@ public class AlarmActivity extends Activity{
 	}
 	
 	public void imAwakeButtonClicked(View v) {
+		stopAlarm();
+		backToMainActivity();
+	}
+	
+	@Override
+	public void onBackPressed() {
+		stopAlarm();
+		backToMainActivity();
+			
+	}
+	
+	private void stopAlarm() {
 		_vibrator.cancel();
 		_r.stop();
 		removeProximityAlert();
 	}
-
+	
+	private void backToMainActivity() {
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+    	this.startActivity(intent);
+	}
+	
 	private void removeProximityAlert() {
 		_lc = new LocationClient(this, 
 				new GooglePlayServicesClient.ConnectionCallbacks() {
@@ -89,11 +107,4 @@ public class AlarmActivity extends Activity{
 			public void onRemoveGeofencesByRequestIdsResult(int arg0,
 					String[] arg1) {}} );
 	}	
-	
-	@Override
-	public void onBackPressed() {
-		Intent intent = new Intent(this, MainActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-    	this.startActivity(intent);		
-	}
 }
