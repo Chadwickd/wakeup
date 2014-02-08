@@ -59,7 +59,6 @@ public class AlarmActivity extends Activity{
 					@Override
 					public void onConnected(Bundle arg0) {
 						removeGeofence();
-						
 					}
 									
 					@Override

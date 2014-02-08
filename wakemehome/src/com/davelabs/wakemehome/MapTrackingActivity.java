@@ -151,7 +151,6 @@ public class MapTrackingActivity extends Activity {
 
 					@Override
 					public void onConnectionFailed(ConnectionResult arg0) {}
-			
 		}
 		);
 		_lc.connect();
