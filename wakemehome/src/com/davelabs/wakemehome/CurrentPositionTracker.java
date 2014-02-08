@@ -2,10 +2,10 @@ package com.davelabs.wakemehome;
 
 import android.location.Location;
 
-import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.model.LatLng;
 
-public class CurrentPositionTracker implements OnMyLocationChangeListener {
+public class CurrentPositionTracker implements LocationListener {
 	
 	public interface CurrentPositionListener {
 		public void onCurrentPositionChanged(LatLng newPosition);
@@ -18,9 +18,8 @@ public class CurrentPositionTracker implements OnMyLocationChangeListener {
 	}
 
 	@Override
-	public void onMyLocationChange(Location location) {
+	public void onLocationChanged(Location location) {
 		LatLng newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-		_listener.onCurrentPositionChanged(newLatLng);	
+		_listener.onCurrentPositionChanged(newLatLng);		
 	}
-
 }

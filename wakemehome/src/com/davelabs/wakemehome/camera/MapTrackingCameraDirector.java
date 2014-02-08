@@ -21,8 +21,8 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	private boolean _hasAimedAtHome;
 	private boolean _waitComplete;
 	private boolean _zooming;
-
 	private boolean _hasZoomed;
+	private boolean _trackingPaused;
 	
 	final private static int BOUNDS_PADDING = 100;
 	
@@ -32,11 +32,20 @@ public class MapTrackingCameraDirector extends CameraDirector {
 		_homeCameraPosition = homeCameraPosition;
 		_homeLocation = homeCameraPosition.target;
 		_defaultZoomLevel = defaultZoomLevel;
+		_trackingPaused = false;
 	}
 
 	public void aimForNewTarget(LatLng newPosition) {
-		_currentTarget = newPosition;		
+		_currentTarget = newPosition;
 		getNextDirection();
+	}
+	
+	public void pauseTracking() {
+		_trackingPaused = true;
+	}
+	
+	public void resumeTracking() {
+		_trackingPaused = false;
 	}
 
 	@Override
@@ -50,7 +59,7 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	
 	@Override
 	protected void getNextDirection() {
-		if (shouldTrack())	{
+		if (shouldTrack()) {
 			track();
 		} else {
 			getPreTrackAnimationDirection();
@@ -98,7 +107,7 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	
 
 	private boolean shouldTrack() {
-		return (_waitComplete && _hasZoomed && !_zooming);
+		return (_waitComplete && _hasZoomed && !_zooming && !_trackingPaused);
 	}
 
 	private boolean shouldZoom() {
@@ -112,13 +121,13 @@ public class MapTrackingCameraDirector extends CameraDirector {
 	}
 
 	private void zoomOutToShowBoth() {
-		 LatLngBounds cameraBounds = getCameraBounds();
-	     CameraUpdate moveToBoundedCurrentLocation = CameraUpdateFactory.newLatLngBounds(cameraBounds, BOUNDS_PADDING);
-	     transmitUpdate(moveToBoundedCurrentLocation);
-	     _zooming = true;
+		LatLngBounds cameraBounds = getCameraBounds();
+		CameraUpdate moveToBoundedCurrentLocation = CameraUpdateFactory.newLatLngBounds(cameraBounds, BOUNDS_PADDING);
+		transmitUpdate(moveToBoundedCurrentLocation);
+		_zooming = true;
 	}
 
-	private void track() {		
+	private void track() {
 		CameraUpdate moveToCurrentLocation = CameraUpdateFactory.newLatLngZoom(_currentTarget, _defaultZoomLevel);
 		transmitUpdate(moveToCurrentLocation);
 	}
