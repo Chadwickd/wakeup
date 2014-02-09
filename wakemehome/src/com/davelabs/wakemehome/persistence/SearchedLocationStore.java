@@ -11,6 +11,7 @@ public interface SearchedLocationStore {
 	List<SearchedLocation> getRecentLocations();
 	
 	void saveLocation(SearchedLocation location);
+	void touchLocationDate(SearchedLocation location);
 	void removeLocation(SearchedLocation location);
 	void pinLocation(SearchedLocation location);
 	void unpinLocation(SearchedLocation location);

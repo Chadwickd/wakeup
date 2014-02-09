@@ -55,6 +55,7 @@ public class RecentSearchListAdapter implements ListAdapter {
 			public void onClick(View v) {
 				Intent intent = IntentHelper.TrackingIntentFromLocation(context, l);
 				context.startActivity(intent);
+				_store.touchLocationDate(l);
 			}
 		});
 		return v;

@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBSearchedLocationStoreDBHelper extends SQLiteOpenHelper {
 	  // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "searchedLocations.db";
     
     public static final String SQL_CREATE_TABLE = 
@@ -18,16 +18,19 @@ public class DBSearchedLocationStoreDBHelper extends SQLiteOpenHelper {
     		SearchedLocationContract.COLUMN_NAME_LAT + " REAL, " +
     		SearchedLocationContract.COLUMN_NAME_LNG + " REAL, " +
     		SearchedLocationContract.COLUMN_NAME_IS_HOME + " INTEGER, " +
-    		SearchedLocationContract.COLUMN_NAME_IS_PINNED + " INTEGER" +
+    		SearchedLocationContract.COLUMN_NAME_IS_PINNED + " INTEGER, " +
+    		SearchedLocationContract.COLUMN_NAME_LAST_UPDATED + " INTEGER" +
     		" )";
 
     public DBSearchedLocationStoreDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
     public void onCreate(SQLiteDatabase db) {
+    	db.execSQL("DROP TABLE IF EXISTS searchedlocations");
         db.execSQL(SQL_CREATE_TABLE);
     }
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    	onCreate(db);
         // Not worrying about this yet
     }
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {

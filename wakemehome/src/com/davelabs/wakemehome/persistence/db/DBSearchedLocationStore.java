@@ -1,6 +1,7 @@
 package com.davelabs.wakemehome.persistence.db;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -27,7 +28,8 @@ public class DBSearchedLocationStore implements SearchedLocationStore {
 		SearchedLocationContract.COLUMN_NAME_LAT,
 		SearchedLocationContract.COLUMN_NAME_LNG,
 		SearchedLocationContract.COLUMN_NAME_IS_HOME,
-		SearchedLocationContract.COLUMN_NAME_IS_PINNED
+		SearchedLocationContract.COLUMN_NAME_IS_PINNED,
+		SearchedLocationContract.COLUMN_NAME_LAST_UPDATED
 	};
 	
 	@Override
@@ -58,7 +60,7 @@ public class DBSearchedLocationStore implements SearchedLocationStore {
 	public List<SearchedLocation> getRecentLocations() {
 		SQLiteDatabase db = _helper.getReadableDatabase();
 		Cursor c = db.query(SearchedLocationContract.TABLE_NAME, COLUMNS, "IS_HOME = 0 AND IS_PINNED = 0", null, null, null, 
-				SearchedLocationContract._ID + " DESC");
+				SearchedLocationContract.COLUMN_NAME_LAST_UPDATED + " DESC");
 		
 		return parseRows(c);
 	}
@@ -66,8 +68,10 @@ public class DBSearchedLocationStore implements SearchedLocationStore {
 	@Override
 	public void saveLocation(SearchedLocation location) {
 		SQLiteDatabase db = _helper.getWritableDatabase();
-
 		ContentValues values = valuesFromLocation(location);
+		
+		String[] upperCaseSearch = {location.getSearchQuery().toUpperCase()};
+		db.delete(SearchedLocationContract.TABLE_NAME, "IS_HOME = 0 AND upper(SEARCH_QUERY) = ?", upperCaseSearch);
 
 		long newRowId = db.insert(SearchedLocationContract.TABLE_NAME, null, values);
 		location.setId(newRowId);
@@ -121,6 +125,12 @@ public class DBSearchedLocationStore implements SearchedLocationStore {
 			updateLocationRow(location);
 		};
 	}
+	
+	@Override
+	public void touchLocationDate(SearchedLocation location) {
+		location.setLastUpdated(new Date());
+		updateLocationRow(location);
+	}
 
 	private List<SearchedLocation> parseRows(Cursor c) {
 		c.moveToFirst();
@@ -141,8 +151,9 @@ public class DBSearchedLocationStore implements SearchedLocationStore {
 		double lng = c.getDouble(c.getColumnIndex(SearchedLocationContract.COLUMN_NAME_LNG));
 		boolean isHome = c.getInt(c.getColumnIndex(SearchedLocationContract.COLUMN_NAME_IS_HOME)) == 1 ? true : false;
 		boolean isPinned = c.getInt(c.getColumnIndex(SearchedLocationContract.COLUMN_NAME_IS_PINNED)) == 1 ? true : false;
+		Date lastUpdated = new Date (c.getLong(c.getColumnIndex(SearchedLocationContract.COLUMN_NAME_LAST_UPDATED)));
 		
-		return new SearchedLocation(id, searchQuery, new LatLng(lat, lng), isHome, isPinned);
+		return new SearchedLocation(id, searchQuery, new LatLng(lat, lng), isHome, isPinned,lastUpdated);
 	}
 	
 	private int updateLocationRow(SearchedLocation location) {
@@ -170,7 +181,9 @@ public class DBSearchedLocationStore implements SearchedLocationStore {
 		values.put(SearchedLocationContract.COLUMN_NAME_LNG, location.getTarget().longitude);
 		values.put(SearchedLocationContract.COLUMN_NAME_IS_HOME, location.isHome());
 		values.put(SearchedLocationContract.COLUMN_NAME_IS_PINNED, location.isPinned());
+		values.put(SearchedLocationContract.COLUMN_NAME_LAST_UPDATED, location.getLastUpdated().getTime());
 		
 		return values;
 	}
+
 }

@@ -1,5 +1,7 @@
 package com.davelabs.wakemehome;
 
+import java.util.Date;
+
 import com.google.android.gms.maps.model.LatLng;
 
 public class SearchedLocation {
@@ -9,6 +11,7 @@ public class SearchedLocation {
 	private LatLng _target;
 	private boolean _isHome;
 	private boolean _isPinned;
+	private Date _last_updated;
 
 	//Creating a new searched location
 	public SearchedLocation(String searchQuery, LatLng target)	{
@@ -16,16 +19,18 @@ public class SearchedLocation {
 		_target = target;
 		_isHome = false;
 		_isPinned = false;
+		_last_updated = new Date();
 	}
 	
 	//Retrieving searched location from the DB
 	public SearchedLocation(long id, String searchQuery, LatLng target, 
-							boolean isHome, boolean isPinned) {
+							boolean isHome, boolean isPinned, Date lastUpdated) {
 		_id = id;
 		_searchQuery = searchQuery;
 		_target = target;
 		_isHome = isHome;
 		_isPinned = isPinned;
+		_last_updated = lastUpdated;
 	}
 	
 	public void setId(long id) {
@@ -62,6 +67,14 @@ public class SearchedLocation {
 	
 	public void pin() {
 		_isPinned = true;
+	}
+	
+	public Date getLastUpdated() {
+		return _last_updated;
+	}
+	
+	public void setLastUpdated(Date date) {
+		_last_updated = date;
 	}
 	
 	public void unpin() {
